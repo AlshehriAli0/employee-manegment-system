@@ -6,6 +6,6 @@
 - [] main menu to start the program
 - [] User Creation fun
 - [] User Deletion fun
-- [] user inquery fun
+- [] user inquiry fun
 - [] Sort fun
 - [] user editing fun
