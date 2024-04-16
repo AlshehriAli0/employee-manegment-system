@@ -1,6 +1,6 @@
 # User Management System
 ## TODOS:
-- [] Connect to db
+- [x] Connect to db
 - [] main menu to start the program
 - [] User Creation fun
 - [] User Deleltion fun
