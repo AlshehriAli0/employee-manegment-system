@@ -29,4 +29,18 @@
 - [] Fun to save chosen data in a .txt
 
 # User object scheema
-
+```
+struct User
+{
+    int id;
+		int nationalId;
+		int password;
+		bool admin;
+    string name;
+    int age;
+    int salary;
+    string nationality;
+    string created_at;
+    string updated_at;
+};
+```
