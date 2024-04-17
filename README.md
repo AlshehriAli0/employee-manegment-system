@@ -29,13 +29,13 @@
 - [] Fun to save chosen data in a .txt
 
 # User object scheema
-```
+```c++
 struct User
 {
     int id;
-int nationalId;
-int password;
-bool admin;
+	int nationalId;
+	int password;
+	bool admin;
     string name;
     int age;
     int salary;
