@@ -1,6 +1,6 @@
 ## Employee Management System 💻
 
-### TODO For App Flow
+### App Flow
 
 - [x] Connect to db
 - [] Main Menu
@@ -19,7 +19,7 @@
         - [] Delete ^ Record
      - [] Logout
 
-### main Functions
+### TODO
 - [] main followed by sub menus to start the program
 - [] User Creation fun
 - [] User Deletion fun
