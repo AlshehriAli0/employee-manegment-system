@@ -49,5 +49,5 @@ struct User
 ```
 
 ### Team Notes
-#### Ali Alshehri
+#### - Ali Alshehri
 - Try to make any function accept an array and return the new array updated so i can use the function and just save
