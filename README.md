@@ -1,6 +1,6 @@
-# Employee Management System 💻
+## Employee Management System 💻
 
-## TODO For App Flow
+### TODO For App Flow
 
 - [x] Connect to db
 - [] Main Menu
@@ -19,7 +19,7 @@
         - [] Delete ^ Record
      - [] Logout
 
-## main Functions
+### main Functions
 - [] main followed by sub menus to start the program
 - [] User Creation fun
 - [] User Deletion fun
@@ -28,7 +28,7 @@
 - [] user editing fun
 - [] Fun to save chosen data in a .txt
 
-## User Structer
+### User Structer
 ```c++
 
 
@@ -48,6 +48,6 @@ struct User
 };
 ```
 
-## Notes
-# Ali Alshehri
+### Notes
+#### Ali Alshehri
 - try to make any function accept an array and return the new array updated so i can use the function and just save
