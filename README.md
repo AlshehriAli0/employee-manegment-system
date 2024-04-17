@@ -26,3 +26,4 @@
 - [] user inquiry fun
 - [] Sort fun
 - [] user editing fun
+- [] Fun to save chosen data in a .txt
