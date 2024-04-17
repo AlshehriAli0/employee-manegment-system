@@ -7,7 +7,7 @@
   - [] Employee Submenu
     - [] Login Authentication
       - [] Display Information
-      - ...
+      - [] Save any wanted personal data
       - [] Logout
   - [] Admin SubMenu
     - [] Login Authentication
