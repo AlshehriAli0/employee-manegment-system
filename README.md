@@ -1,6 +1,6 @@
 # Employee Management System 💻
 
-## TODO
+## TODO For App Flow
 
 - [x] Connect to db
 - [] Main Menu
@@ -19,7 +19,7 @@
         - [] Delete ^ Record
      - [] Logout
 
-## Functions
+## main Functions
 - [] main followed by sub menus to start the program
 - [] User Creation fun
 - [] User Deletion fun
@@ -28,7 +28,7 @@
 - [] user editing fun
 - [] Fun to save chosen data in a .txt
 
-## User object scheema
+## User Structer
 ```c++
 
 
