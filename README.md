@@ -27,6 +27,7 @@
 - [] Sort fun
 - [] user editing fun
 - [] Fun to save chosen data in a .txt
+- [] Fun to search by any chosen field
 
 ### User Structer
 ```c++
