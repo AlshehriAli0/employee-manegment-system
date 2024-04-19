@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
+#include <ctime>
 
 using namespace std;
 
