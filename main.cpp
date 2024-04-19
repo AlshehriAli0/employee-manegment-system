@@ -123,8 +123,8 @@ int main()
 
                 case 2:
                     //* Create Record
+                    addUser();
                     break;
-
                 case 3:
                     //* Delete Record
                     break;
@@ -215,4 +215,28 @@ int isValid(int &option)
         cout << ">> ";
     }
     return option;
+}
+
+void addUser()
+{
+    User newUser;
+    newUser.id = nextID++; // * Modifies global variable of nextID to assign unique ID to users
+    cout << "Name: ";
+    cin.ignore();
+    getline(cin, newUser.name);
+    cout << "Age: ";
+    isValid(newUser.age);
+    cout << "Salary: ";
+    isValid(newUser.salary);
+    cout << "Nationality: ";
+    cin >> newUser.nationality;
+
+    // * Current Day-Date-Time
+    time_t currentTime = time(nullptr);
+    newUser.created_at = asctime(localtime(&currentTime));
+    newUser.updated_at = "";
+
+    // * Adds user to the array of 'Users'
+    Users.push_back(newUser);
+    cout << "Employee added successfully!\n";
 }
