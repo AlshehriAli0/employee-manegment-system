@@ -15,18 +15,17 @@
         - [x] Create an Employee's Record (including user & password for employee submenu login. # not sure if it's worth the hassle but encrypting the password column somehow would be a nice feature to implement and mention during presentation)
         - [x] Read/Display ^ Record
         - [x] Update/Edit ^ Record
-          - [] Salary, Performance evaluation, ...
-        - [] Delete ^ Record
+        - [x] Delete ^ Record
     - [] Logout
 
 ### TODO
 
 - [x] main followed by sub menus to start the program
-- [] User Creation fun
-- [] User Deletion fun
+- [x] User Creation fun
+- [x] User Deletion fun
 - [] user inquiry fun
 - [] Sort fun
-- [] user editing fun
+- [x] user editing fun
 - [] Fun to save chosen data in a .txt
 - [] Fun to search by any chosen field
 

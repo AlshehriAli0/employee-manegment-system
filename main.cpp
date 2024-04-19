@@ -36,7 +36,7 @@ void displayUsers();
 
 void updateUser(int id);
 
-void deleteUser(int id);
+void deleteUser(int ID);
 
 int isValid(int &option);
 
@@ -104,6 +104,8 @@ int main()
             while (!exitMenu)
             {
                 int option;
+                int userID;
+
                 cout << "\nOptions:\n";
                 cout << "1. Display records\n";
                 cout << "2. Add record\n";
@@ -128,11 +130,13 @@ int main()
                     break;
                 case 3:
                     //* Delete Record
+                    cout << "User ID:\n>> ";
+                    isValid(userID);
+                    deleteUser(userID);
                     break;
 
                 case 4:
                     //* Update Record
-                    int userID;
                     cout << "User ID:\n>> ";
                     isValid(userID);
                     updateUser(userID);
@@ -272,6 +276,7 @@ void updateUser(int id)
         if (user.id == id)
         {
             int option;
+            bool updated;
             do
             {
                 cout << "\nOptions:\n";
@@ -285,25 +290,26 @@ void updateUser(int id)
 
                 switch (option)
                 {
-                case 0:
-                    exit(0);
-
                 case 1:
                     cout << "Name: ";
                     cin.ignore();
                     getline(cin, user.name);
+                    updated = true;
                     break;
                 case 2:
                     cout << "Age: ";
                     cin >> user.age;
+                    updated = true;
                     break;
                 case 3:
                     cout << "Salary: ";
                     cin >> user.salary;
+                    updated = true;
                     break;
                 case 4:
                     cout << "Nationality: ";
                     cin >> user.nationality;
+                    updated = true;
                     break;
                 case 5:
                     cout << endl;
@@ -314,10 +320,38 @@ void updateUser(int id)
                 }
             } while (option != 5);
 
-            // * Saves at 'updated_at' when the specified user last updated his info
-            time_t currentTime = time(nullptr);
-            user.updated_at = asctime(localtime(&currentTime));
-            cout << "\n Updated Successfully \n";
+            // * Check if user updated to display message after exiting
+            if (updated)
+            {
+                // * Saves at 'updated_at' when the specified user info was last updated
+                time_t currentTime = time(nullptr);
+                user.updated_at = asctime(localtime(&currentTime));
+                cout << "\nUpdated Successfully\n";
+            }
         }
+    }
+}
+
+void deleteUser(int ID)
+{
+    bool found = false;
+
+    //* Iterate through the vector of users
+    for (auto currentUserIterator = Users.begin(); currentUserIterator != Users.end(); ++currentUserIterator)
+    {
+        //* Check if the current iterator's ID matches the specified ID
+        if ((*currentUserIterator).id == ID)
+        {
+            //* Remove user from array
+            currentUserIterator = Users.erase(currentUserIterator);
+            cout << "\nRecord Successfully Deleted\n";
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "\nNot Found\n";
     }
 }
