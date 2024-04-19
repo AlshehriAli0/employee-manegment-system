@@ -25,6 +25,14 @@ struct User
 // void fetchUsers(PGconn *conn, User *&users, int &numUsers);
 void getConnectionLink(string &connectionLink);
 
+void addUser();
+
+void displayUsers();
+
+void updateUser(int id);
+
+void deleteUser(int id);
+
 int main()
 {
     string connectionLink;
