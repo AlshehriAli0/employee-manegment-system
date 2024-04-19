@@ -105,7 +105,7 @@ int main()
             {
                 int option;
                 cout << "\nOptions:\n";
-                cout << "1. Display Names\n";
+                cout << "1. Display records\n";
                 cout << "2. Add record\n";
                 cout << "3. Delete a record\n";
                 cout << "4. Update a record\n";
@@ -118,7 +118,8 @@ int main()
                 switch (option)
                 {
                 case 1:
-                    // * Read Record
+                    // * Read Records
+                    displayUsers();
                     break;
 
                 case 2:
@@ -239,4 +240,23 @@ void addUser()
     // * Adds user to the array of 'Users'
     Users.push_back(newUser);
     cout << "Employee added successfully!\n";
+}
+
+// * Loops through every struct object stored in 'Users' dynamic array
+void displayUsers()
+{
+    if (Users.empty())
+    {
+        cout << "\nNo Record Found\n";
+    }
+    else
+    {
+        cout << "Employees:" << endl;
+        for (const auto &user : Users)
+        {
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+                 << " | Salary: " << user.salary << " | Nationality: " << user.nationality
+                 << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
 }
