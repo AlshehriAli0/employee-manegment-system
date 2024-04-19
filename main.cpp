@@ -132,6 +132,10 @@ int main()
 
                 case 4:
                     //* Update Record
+                    int userID;
+                    cout << "User ID:\n>> ";
+                    isValid(userID);
+                    updateUser(userID);
                     break;
 
                 case 5:
@@ -257,6 +261,63 @@ void displayUsers()
             cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
                  << " | Salary: " << user.salary << " | Nationality: " << user.nationality
                  << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
+}
+
+void updateUser(int id)
+{
+    for (auto &user : Users)
+    {
+        if (user.id == id)
+        {
+            int option;
+            do
+            {
+                cout << "\nOptions:\n";
+                cout << "1. Update Name\n";
+                cout << "2. Update Age\n";
+                cout << "3. Update Salary\n";
+                cout << "4. Update Nationality\n";
+                cout << "5. Exit\n";
+                cout << ">> ";
+                cin >> option;
+
+                switch (option)
+                {
+                case 0:
+                    exit(0);
+
+                case 1:
+                    cout << "Name: ";
+                    cin.ignore();
+                    getline(cin, user.name);
+                    break;
+                case 2:
+                    cout << "Age: ";
+                    cin >> user.age;
+                    break;
+                case 3:
+                    cout << "Salary: ";
+                    cin >> user.salary;
+                    break;
+                case 4:
+                    cout << "Nationality: ";
+                    cin >> user.nationality;
+                    break;
+                case 5:
+                    cout << endl;
+                    break;
+                default:
+                    cout << "\nInvalid prompt\n";
+                    break;
+                }
+            } while (option != 5);
+
+            // * Saves at 'updated_at' when the specified user last updated his info
+            time_t currentTime = time(nullptr);
+            user.updated_at = asctime(localtime(&currentTime));
+            cout << "\n Updated Successfully \n";
         }
     }
 }

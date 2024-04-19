@@ -14,7 +14,7 @@
       - [] CRUD Operations
         - [x] Create an Employee's Record (including user & password for employee submenu login. # not sure if it's worth the hassle but encrypting the password column somehow would be a nice feature to implement and mention during presentation)
         - [x] Read/Display ^ Record
-        - [] Update/Edit ^ Record
+        - [x] Update/Edit ^ Record
           - [] Salary, Performance evaluation, ...
         - [] Delete ^ Record
     - [] Logout
