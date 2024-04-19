@@ -23,6 +23,9 @@ struct User
     string updated_at;
 };
 
+vector<User> Users; // * Dynamic Array
+int nextID = 1;     // * Assign users with unique ID's
+
 // * Prototype of functions
 // void fetchUsers(PGconn *conn, User *&users, int &numUsers);
 void getConnectionLink(string &connectionLink);
@@ -34,6 +37,8 @@ void displayUsers();
 void updateUser(int id);
 
 void deleteUser(int id);
+
+int isValid(int &option);
 
 int main()
 {
@@ -66,12 +71,12 @@ int main()
         {3, "Bob Johnson", 35, 70000, "CA", "2024-04-16", "2024-04-16"},
         {4, "Ali", 25, 70000, "CA", "2024-04-16", "2024-04-16"}};
 
-    for (int i = 0; i < numUsers; i++)
-    {
-        cout << "ID: " << users[i].id << ", Name: " << users[i].name << ", Age: " << users[i].age
-             << ", Salary: " << users[i].salary << ", Nationality: " << users[i].nationality
-             << ", Created: " << users[i].created_at << ", Updated: " << users[i].updated_at << endl;
-    }
+    // // for (int i = 0; i < numUsers; i++)
+    // // {
+    // //     cout << "ID: " << users[i].id << ", Name: " << users[i].name << ", Age: " << users[i].age
+    // //          << ", Salary: " << users[i].salary << ", Nationality: " << users[i].nationality
+    // //          << ", Created: " << users[i].created_at << ", Updated: " << users[i].updated_at << endl;
+    // // }
 
     // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
     // * users.[attribute]
@@ -80,6 +85,76 @@ int main()
     // delete[] users;
     // PQfinish(conn);
 
+    int option;
+    while (true)
+    {
+        cout << "\nOptions:\n";
+        cout << "1. Admin Login\n";
+        cout << "2. Employee Login\n";
+        cout << "3. Exit\n";
+        cout << ">> ";
+
+        // * Wait for valid input
+        isValid(option);
+
+        if (option == 1)
+        {
+            // * Admin Submenu
+            bool exitMenu = false;
+            while (!exitMenu)
+            {
+                int option;
+                cout << "\nOptions:\n";
+                cout << "1. Display Names\n";
+                cout << "2. Add record\n";
+                cout << "3. Delete a record\n";
+                cout << "4. Update a record\n";
+                cout << "5. Exit\n";
+                cout << ">> ";
+
+                // * Wait for valid input
+                isValid(option);
+
+                switch (option)
+                {
+                case 1:
+                    // * Read Record
+                    break;
+
+                case 2:
+                    //* Create Record
+                    break;
+
+                case 3:
+                    //* Delete Record
+                    break;
+
+                case 4:
+                    //* Update Record
+                    break;
+
+                case 5:
+                    // * Exit Admin Submenu
+                    exitMenu = true;
+                    break;
+                default:
+                    cout << "\nInvalid prompt\n";
+                }
+            }
+        }
+        else if (option == 2)
+        {
+            // * Employee Submenu
+        }
+        else if (option == 3)
+        {
+            exit(0);
+        }
+        else
+        {
+            cout << "\n Invalid prompt\n";
+        }
+    }
     return 0;
 }
 
@@ -129,3 +204,15 @@ void getConnectionLink(string &connectionLink)
 // }
 
 // * (Ali Alshehri) put your functions below this line
+
+// * Prevents program from crashing when user enters non-numeric as input
+int isValid(int &option)
+{
+    while (!(cin >> option))
+    {
+        cin.clear();
+        cin.ignore(100, '\n');
+        cout << ">> ";
+    }
+    return option;
+}
