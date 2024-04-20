@@ -1,5 +1,5 @@
 env.txt
 .vscode/
 main.exe
-main.local.cpp
-main.local.exe
+local.cpp
+local.exe

@@ -6,6 +6,8 @@
 #include <cstring>
 #include <vector>
 #include <ctime>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -30,7 +32,14 @@ vector<User> Users; // * Dynamic Array
 int nextID = 1;     // * Assign users with unique ID's
 
 // * Prototype of functions
-// void fetchUsers(PGconn *conn, User *&users, int &numUsers);
+
+int findUserByNationalID(int nationalID, vector<User> Users);
+
+// PGconn *connectToDatabase(const string &connectionLink);
+
+// void fetchUsers(PGconn *conn, vector<User> &users);
+
+void typeWriterEffect(const string &text, int delay);
 
 void getConnectionLink(string &connectionLink);
 
@@ -47,26 +56,23 @@ int isValid(int &option);
 int main()
 {
     string connectionLink;
-    // getConnectionLink(connectionLink);
+    getConnectionLink(connectionLink);
 
     //* Connect to the database
-    // PGconn *conn = PQconnectdb(connectionLink.c_str());
-    // if (PQstatus(conn) == CONNECTION_BAD)
+    // PGconn *conn = connectToDatabase(connectionLink);
+    // if (!conn)
     // {
-    //     cerr << "Connection to database failed: " << PQerrorMessage(conn) << endl;
-    //     PQfinish(conn);
     //     return 1;
     // }
-    // else
-    // {
-    //     cout << "Connection to database successful." << endl;
-    // }
+    cout << endl;
 
-    // User *users = nullptr;
-    int numUsers = 3;
+    // * Welcoming message
+
+    string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
+    typeWriterEffect(welcomeMessage, 80);
 
     // * Fetch users from the database and saving in array to work with
-    // fetchUsers(conn, users, numUsers);
+    // fetchUsers(conn, Users);
 
     //* Dummy user data
     User users[] = {
@@ -75,27 +81,28 @@ int main()
         {3, 112233445, 5678, false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"},
         {4, 998877665, 8765, true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}};
 
-    // for (int i = 0; i < numUsers; i++)
-    // {
-    //     cout << "ID: " << users[i].id << ", Name: " << users[i].name << ", Age: " << users[i].age
-    //          << ", Salary: " << users[i].salary << ", Nationality: " << users[i].nationality
-    //          << ", Created: " << users[i].created_at << ", Updated: " << users[i].updated_at << endl;
-    // }
+    // * Adding dummy data to the vector of Users
+    Users.insert(Users.end(), begin(users), end(users));
+
+    
 
     // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
     // * users.[attribute]
 
-    //* Clean allocated memory
+    //* Clean allocated memory and kill db connection
     // delete[] users;
     // PQfinish(conn);
 
     int option;
+
     while (true)
     {
-        cout << "\nOptions:\n";
-        cout << "1. Admin Login\n";
-        cout << "2. Employee Login\n";
-        cout << "3. Exit\n";
+        // * Displaying the main menu
+        cout << endl;
+        cout << "\033[1;1mOptions:\033[0m\n";
+        cout << "\033[1;31m1.\033[0m Admin Login\n";  
+        cout << "\033[1;32m2.\033[0m Employee Login\n";
+        cout << "\033[1;34m3.\033[0m Exit\n";          
         cout << ">> ";
 
         // * Wait for valid input
@@ -103,6 +110,39 @@ int main()
 
         if (option == 1)
         {
+            cout << endl;
+
+            // * Admin Authentication
+            cout << "Enter National ID: ";
+            int nationalID;
+            cin >> nationalID;
+
+            int userIndex = findUserByNationalID(nationalID, Users);
+
+            if (userIndex == -1)
+            {
+                cout << "User not found\n";
+                continue;
+            }
+
+            cout << "Enter Password: ";
+            int password;
+            cin >> password;
+
+            if (password == Users[userIndex].password && Users[userIndex].admin == true)
+            {
+                cout << endl;
+                cout << "Authentication successful. Entering admin menu.\n";
+                cout << "Welcome " << Users[userIndex].name << endl;
+            }
+            else
+            {
+                cout << endl;
+                Users[userIndex].admin == false ? cout << "Authentication failed. You are not an admin. Exiting.\n" : cout << "Authentication failed. Wrong credentials.\n";
+
+                continue;
+            }
+
             // * Admin Submenu
             bool exitMenu = false;
             while (!exitMenu)
@@ -187,9 +227,11 @@ void getConnectionLink(string &connectionLink)
 }
 
 // * Function to fetch users from the database
-// void fetchUsers(PGconn *conn, User *&users, int &numUsers)
+// void fetchUsers(PGconn *conn, vector<User> &users)
 // {
-//     PGresult *res = PQexec(conn, "SELECT id, name, age, salary, nationality, created_at, updated_at FROM users");
+//     users.clear();
+
+//     PGresult *res = PQexec(conn, "SELECT id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at FROM users");
 
 //     if (PQresultStatus(res) != PGRES_TUPLES_OK)
 //     {
@@ -198,19 +240,23 @@ void getConnectionLink(string &connectionLink)
 //         return;
 //     }
 
-//     numUsers = PQntuples(res);
+//     int numRows = PQntuples(res);
 
-//     users = new User[numUsers];
-
-//     for (int i = 0; i < numUsers; i++)
+//     for (int i = 0; i < numRows; i++)
 //     {
-//         users[i].id = atoi(PQgetvalue(res, i, 0));
-//         users[i].name = PQgetvalue(res, i, 1);
-//         users[i].age = atoi(PQgetvalue(res, i, 2));
-//         users[i].salary = atoi(PQgetvalue(res, i, 3));
-//         users[i].nationality = PQgetvalue(res, i, 4);
-//         users[i].created_at = PQgetvalue(res, i, 5);
-//         users[i].updated_at = PQgetvalue(res, i, 6);
+//         User newUser;
+//         newUser.id = atoi(PQgetvalue(res, i, 0));
+//         newUser.nationalId = atoi(PQgetvalue(res, i, 1));
+//         newUser.password = atoi(PQgetvalue(res, i, 2));
+//         newUser.admin = (PQgetvalue(res, i, 3)[0] == 't');
+//         newUser.name = PQgetvalue(res, i, 4);
+//         newUser.age = atoi(PQgetvalue(res, i, 5));
+//         newUser.salary = atoi(PQgetvalue(res, i, 6));
+//         newUser.nationality = PQgetvalue(res, i, 7);
+//         newUser.created_at = PQgetvalue(res, i, 8);
+//         newUser.updated_at = PQgetvalue(res, i, 9);
+
+//         users.push_back(newUser);
 //     }
 
 //     PQclear(res);
@@ -359,3 +405,45 @@ void deleteUser(int ID)
         cout << "\nNot Found\n";
     }
 }
+
+// * Function to search for a user by ID
+int findUserByNationalID(int nationalID, vector<User> Users)
+{
+    for (int i = 0; i < Users.size(); i++)
+    {
+        if (Users[i].nationalId == nationalID)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// * Function to print typewriter effect
+
+void typeWriterEffect(const string &text, int delay)
+{
+    for (char c : text)
+    {
+        cout << c << flush;
+        this_thread::sleep_for(chrono::milliseconds(delay));
+    }
+}
+
+// TODO: Function to save users to the database
+
+// * Connect to Db
+// PGconn *connectToDatabase(const string &connectionLink)
+// {
+//     PGconn *conn = PQconnectdb(connectionLink.c_str());
+//     if (PQstatus(conn) == CONNECTION_BAD)
+//     {
+//         cerr << "Connection to database failed: " << PQerrorMessage(conn) << endl;
+//         PQfinish(conn);
+//         return nullptr;
+//     }
+//     else
+//     {
+//         return conn;
+//     }
+// }

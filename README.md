@@ -10,7 +10,7 @@
       - [] Save any wanted personal data
       - [] Logout
   - [x] Admin SubMenu
-    - [] Login Authentication
+    - [x] Login Authentication
       - [] CRUD Operations
         - [x] Create an Employee's Record (including user & password for employee submenu login. # not sure if it's worth the hassle but encrypting the password column somehow would be a nice feature to implement and mention during presentation)
         - [x] Read/Display ^ Record
