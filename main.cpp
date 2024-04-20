@@ -198,6 +198,40 @@ int main()
         else if (option == 2)
         {
             // * Employee Submenu
+            cout << endl;
+
+            // * Employee Authentication
+            cout << "Enter National ID: ";
+            int nationalID;
+            cin >> nationalID;
+
+            int userIndex = findUserByNationalID(nationalID, Users);
+
+            if (userIndex == -1)
+            {
+                cout << "User not found\n";
+                continue;
+            }
+
+            cout << "Enter Password: ";
+            int password;
+            cin >> password;
+
+            if (password == Users[userIndex].password && Users[userIndex].admin == false)
+            {
+                cout << endl;
+                cout << "Authentication successful. Entering employee menu.\n";
+                cout << "Welcome " << Users[userIndex].name << endl;
+            }
+            else
+            {
+                cout << endl;
+                Users[userIndex].admin == true ? cout << "Authentication failed. Use the admin login instead. Exiting.\n" : cout << "Authentication failed. Wrong credentials.\n";
+
+                continue;
+            }
+
+            // TODO: Employee Submenu options
         }
         else if (option == 3)
         {

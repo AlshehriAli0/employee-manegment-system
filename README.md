@@ -5,7 +5,7 @@
 - [x] Connect to db
 - [x] Main Menu
   - [] Employee Submenu
-    - [] Login Authentication
+    - [x] Login Authentication
       - [] Display Information
       - [] Save any wanted personal data
       - [] Logout
