@@ -15,6 +15,9 @@ using namespace std;
 struct User
 {
     int id;
+    int nationalId;
+    int password;
+    bool admin;
     string name;
     int age;
     int salary;
@@ -28,6 +31,7 @@ int nextID = 1;     // * Assign users with unique ID's
 
 // * Prototype of functions
 // void fetchUsers(PGconn *conn, User *&users, int &numUsers);
+
 void getConnectionLink(string &connectionLink);
 
 void addUser();
@@ -66,17 +70,17 @@ int main()
 
     //* Dummy user data
     User users[] = {
-        {1, "John Doe", 30, 50000, "US", "2024-04-16", "2024-04-16"},
-        {2, "Alice Smith", 25, 60000, "UK", "2024-04-16", "2024-04-16"},
-        {3, "Bob Johnson", 35, 70000, "CA", "2024-04-16", "2024-04-16"},
-        {4, "Ali", 25, 70000, "CA", "2024-04-16", "2024-04-16"}};
+        {1, 123456789, 1234, false, "John Doe", 30, 50000, "American", "2022-01-01", "2022-01-01"},
+        {2, 987654321, 4321, true, "Jane Doe", 28, 60000, "American", "2022-01-02", "2022-01-02"},
+        {3, 112233445, 5678, false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"},
+        {4, 998877665, 8765, true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}};
 
-    // // for (int i = 0; i < numUsers; i++)
-    // // {
-    // //     cout << "ID: " << users[i].id << ", Name: " << users[i].name << ", Age: " << users[i].age
-    // //          << ", Salary: " << users[i].salary << ", Nationality: " << users[i].nationality
-    // //          << ", Created: " << users[i].created_at << ", Updated: " << users[i].updated_at << endl;
-    // // }
+    // for (int i = 0; i < numUsers; i++)
+    // {
+    //     cout << "ID: " << users[i].id << ", Name: " << users[i].name << ", Age: " << users[i].age
+    //          << ", Salary: " << users[i].salary << ", Nationality: " << users[i].nationality
+    //          << ", Created: " << users[i].created_at << ", Updated: " << users[i].updated_at << endl;
+    // }
 
     // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
     // * users.[attribute]
