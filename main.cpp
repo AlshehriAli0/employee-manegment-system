@@ -419,8 +419,7 @@ int findUserByNationalID(int nationalID, vector<User> Users)
     return -1;
 }
 
-// * Function to print typewriter effect
-
+// * Print with typewriter effect
 void typeWriterEffect(const string &text, int delay)
 {
     for (char c : text)
