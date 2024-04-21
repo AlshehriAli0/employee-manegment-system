@@ -18,7 +18,7 @@ struct User
 {
     int id;
     int nationalId;
-    int password;
+    string password;
     bool admin;
     string name;
     int age;
@@ -53,10 +53,16 @@ void deleteUser(int ID);
 
 int isValid(int &option);
 
+string readSecretKey(const string &filename);
+
+string vigenereCipherEncrypt(const string &plaintext, const string &keyword);
+
 int main()
 {
     string connectionLink;
     getConnectionLink(connectionLink);
+
+    string key = readSecretKey("env.txt");
 
     //* Connect to the database
     // PGconn *conn = connectToDatabase(connectionLink);
@@ -76,15 +82,14 @@ int main()
 
     //* Dummy user data
     User users[] = {
-        {1, 123456789, 1234, false, "John Doe", 30, 50000, "American", "2022-01-01", "2022-01-01"},
-        {2, 987654321, 4321, true, "Jane Doe", 28, 60000, "American", "2022-01-02", "2022-01-02"},
-        {3, 112233445, 5678, false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"},
-        {4, 998877665, 8765, true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}};
+        {1, 123456789, "0608Sbh", false, "John Doe", 30, 50000, "American", "2022-01-01", "2022-01-01"},    //* Decrypted password: 1234abc
+        {2, 987654321, ")795Ubf", true, "Jane Doe", 28, 60000, "American", "2022-01-02", "2022-01-02"},     //* Decrypted password: 4321cba
+        {3, 112233445, "0608Sbh", false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"}, //* Decrypted password: 1234abc
+        {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}    //* Decrypted password: 4321cba
+    };
 
     // * Adding dummy data to the vector of Users
     Users.insert(Users.end(), begin(users), end(users));
-
-    
 
     // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
     // * users.[attribute]
@@ -100,9 +105,9 @@ int main()
         // * Displaying the main menu
         cout << endl;
         cout << "\033[1;1mOptions:\033[0m\n";
-        cout << "\033[1;31m1.\033[0m Admin Login\n";  
+        cout << "\033[1;31m1.\033[0m Admin Login\n";
         cout << "\033[1;32m2.\033[0m Employee Login\n";
-        cout << "\033[1;34m3.\033[0m Exit\n";          
+        cout << "\033[1;34m3.\033[0m Exit\n";
         cout << ">> ";
 
         // * Wait for valid input
@@ -126,10 +131,14 @@ int main()
             }
 
             cout << "Enter Password: ";
-            int password;
+            string password;
             cin >> password;
+            
+            // * Encrypting the password to compare with the stored encrypted password
+            string encryptedPassword = vigenereCipherEncrypt(password, key);
+            cout << encryptedPassword << endl;
 
-            if (password == Users[userIndex].password && Users[userIndex].admin == true)
+            if (encryptedPassword == Users[userIndex].password && Users[userIndex].admin == true)
             {
                 cout << endl;
                 cout << "Authentication successful. Entering admin menu.\n";
@@ -214,10 +223,14 @@ int main()
             }
 
             cout << "Enter Password: ";
-            int password;
+            string password;
             cin >> password;
 
-            if (password == Users[userIndex].password && Users[userIndex].admin == false)
+            // * Encrypting the password to compare with the stored encrypted password
+            string encryptedPassword = vigenereCipherEncrypt(password, key);
+            cout << encryptedPassword << endl;
+
+            if (encryptedPassword == Users[userIndex].password && Users[userIndex].admin == false)
             {
                 cout << endl;
                 cout << "Authentication successful. Entering employee menu.\n";
@@ -480,3 +493,47 @@ void typeWriterEffect(const string &text, int delay)
 //         return conn;
 //     }
 // }
+
+// * Read encryption key from file which
+string readSecretKey(const string &filename)
+{
+    ifstream file(filename);
+    string key;
+    string temp;
+
+    getline(file, temp);
+
+    getline(file, key);
+
+    return key;
+}
+
+// * Encrypt and decrypt password
+string vigenereCipherEncrypt(const string &plaintext, const string &keyword)
+{
+    string ciphertext;
+    int keyLength = keyword.length();
+    int textLength = plaintext.length();
+
+    for (int i = 0, j = 0; i < textLength; ++i)
+    {
+        char c = plaintext[i];
+        if (isalpha(c))
+        {
+            char base = islower(c) ? 'a' : 'A';
+            ciphertext += ((c - base + keyword[j % keyLength] - 'a') % 26) + base;
+            ++j;
+        }
+        else if (isdigit(c))
+        {
+            ciphertext += ((c - '0' + keyword[j % keyLength] - 'a') % 10) + '0';
+            ++j;
+        }
+        else
+        {
+            ciphertext += c;
+        }
+    }
+
+    return ciphertext;
+}
