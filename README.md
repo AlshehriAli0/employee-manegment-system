@@ -21,15 +21,16 @@
 ### TODO
 
 - [x] main followed by sub menus to start the program
-- [x] User Creation fun
-- [x] User Deletion fun
-- [] user inquiry fun
-- [] Sort fun
-- [x] user editing fun
-- [] Fun to save chosen data in a .txt
-- [] Fun to search by any chosen field
+- [x] User Creation function
+- [x] User Deletion function
+- [] user inquiry function
+- [] Sort function
+- [] Encryption function
+- [x] user editing function
+- [] Function to save chosen data in a .txt
+- [] Function to search by any chosen field
 
-### User Structer
+### User Structure
 
 ```c++
 
