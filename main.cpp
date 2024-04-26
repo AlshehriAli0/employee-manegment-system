@@ -54,9 +54,13 @@ void deleteUser(int ID);
 
 int isValid(int &option);
 
+string getCurrentDateTime();
+
 char *getPassword();
 
 string readSecretKey(const string &filename);
+// * Encryption Key
+const string key = readSecretKey("env.txt");
 
 string vigenereCipherEncrypt(const string &plaintext, const string &keyword);
 
@@ -64,8 +68,6 @@ int main()
 {
     string connectionLink;
     getConnectionLink(connectionLink);
-
-    string key = readSecretKey("env.txt");
 
     //* Connect to the database
     // PGconn *conn = connectToDatabase(connectionLink);
@@ -77,8 +79,9 @@ int main()
 
     // * Welcoming message
 
-    string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
-    typeWriterEffect(welcomeMessage, 80);
+    // * the delay is driving me crazy >_<
+    // string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
+    // typeWriterEffect(welcomeMessage, 80);
 
     // * Fetch users from the database and saving in array to work with
     // fetchUsers(conn, Users);
@@ -288,14 +291,14 @@ void getConnectionLink(string &connectionLink)
 
 //     PGresult *res = PQexec(conn, "SELECT id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at FROM users");
 
-// if (PQresultStatus(res) != PGRES_TUPLES_OK)
+//     if (PQresultStatus(res) != PGRES_TUPLES_OK)
 //     {
 //         cerr << "Failed to fetch users: " << PQerrorMessage(conn) << endl;
 //         PQclear(res);
 //         return;
 //     }
 
-// int numRows = PQntuples(res);
+//     int numRows = PQntuples(res);
 
 //     for (int i = 0; i < numRows; i++)
 //     {
@@ -338,6 +341,11 @@ void addUser()
     cout << "Name: ";
     cin.ignore();
     getline(cin, newUser.name);
+    cout << "Password: ";
+    newUser.password = getPassword();
+    cout << endl;
+    // * Encryption Process
+    newUser.password = vigenereCipherEncrypt(newUser.password, key);
     cout << "Age: ";
     isValid(newUser.age);
     cout << "Salary: ";
@@ -345,9 +353,7 @@ void addUser()
     cout << "Nationality: ";
     cin >> newUser.nationality;
 
-    // * Current Day-Date-Time
-    time_t currentTime = time(nullptr);
-    newUser.created_at = asctime(localtime(&currentTime));
+    newUser.created_at = getCurrentDateTime();
     newUser.updated_at = "";
 
     // * Adds user to the array of 'Users'
@@ -367,7 +373,8 @@ void displayUsers()
         cout << "Employees:" << endl;
         for (const auto &user : Users)
         {
-            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+            // TODO: Remove Password before submission
+            cout << "ID: " << user.id << " | Name: " << user.name << " | (REMOVE L8) Password: " << user.password << " | Age: " << user.age
                  << " | Salary: " << user.salary << " | Nationality: " << user.nationality
                  << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
         }
@@ -386,51 +393,58 @@ void updateUser(int id)
             {
                 cout << "\nOptions:\n";
                 cout << "1. Update Name\n";
-                cout << "2. Update Age\n";
-                cout << "3. Update Salary\n";
-                cout << "4. Update Nationality\n";
-                cout << "5. Exit\n";
+                cout << "2. Update Password\n";
+                cout << "3. Update Age\n";
+                cout << "4. Update Salary\n";
+                cout << "5. Update Nationality\n";
+                cout << "6. Exit\n";
                 cout << ">> ";
-                cin >> option;
+                isValid(option);
 
                 switch (option)
                 {
                 case 1:
-                    cout << "Name: ";
+                    cout << "New Name: ";
                     cin.ignore();
                     getline(cin, user.name);
                     updated = true;
                     break;
                 case 2:
-                    cout << "Age: ";
-                    cin >> user.age;
+                    cout << "New Password: ";
+                    user.password = getPassword();
+                    cout << endl;
+                    user.password = vigenereCipherEncrypt(user.password, key);
                     updated = true;
                     break;
                 case 3:
-                    cout << "Salary: ";
-                    cin >> user.salary;
+                    cout << "New Age: ";
+                    cin >> user.age;
                     updated = true;
                     break;
                 case 4:
-                    cout << "Nationality: ";
-                    cin >> user.nationality;
+                    cout << "New Salary: ";
+                    cin >> user.salary;
                     updated = true;
                     break;
                 case 5:
+                    cout << "New Nationality: ";
+                    cin >> user.nationality;
+                    updated = true;
+                    break;
+                case 6:
                     cout << endl;
                     break;
                 default:
                     cout << "\nInvalid prompt\n";
                     break;
                 }
-            } while (option != 5);
+            } while (option != 6);
 
             // * Check if user updated to display message after exiting
             if (updated)
             {
-                // * Saves at 'updated_at' when the specified user info was last updated
-                time_t currentTime = time(nullptr);
-                user.updated_at = asctime(localtime(&currentTime));
+                // * Saves when the specified user info was last updated in 'updated_at'
+                user.updated_at = getCurrentDateTime();
                 cout << "\nUpdated Successfully\n";
             }
         }
@@ -554,7 +568,7 @@ char *getPassword()
     while (true)
     {
         char c = _getch();
-        if (c == 13) 
+        if (c == 13)
             break;
         else if (c == 8)
         {
@@ -564,12 +578,23 @@ char *getPassword()
                 cout << "\b \b";
             }
         }
-        else if (i < 29) 
+        else if (i < 29)
         {
             s[i++] = c;
             _putch('*');
         }
     }
-    s[i] = '\0'; 
+    s[i] = '\0';
     return s;
+}
+
+string getCurrentDateTime()
+{
+    // * Get current time in seconds since 1970 (Don't ask why I've got no clue either)
+    time_t currentTime = time(nullptr);
+    char formattedTime[20];
+    // * Format current time to (Year-Month-Day currentTime)
+    strftime(formattedTime, 20, "%Y-%m-%d %H:%M:%S", localtime(&currentTime));
+
+    return formattedTime;
 }
