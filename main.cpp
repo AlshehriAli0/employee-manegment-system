@@ -279,6 +279,47 @@ int main()
                 cout << endl;
                 cout << "Authentication successful. Entering employee menu.\n";
                 cout << "Welcome " << Users[userIndex].name << endl;
+                // * Employee Submenu
+                bool exitMenu = false;
+                while (!exitMenu)
+                {
+                    int option;
+                    int userID;
+
+                    cout << "\nOptions:\n";
+                    cout << "1. Display Information\n";
+                    // TODO: Add more features
+                    cout << "5. Exit\n";
+                    cout << ">> ";
+
+                    // * Wait for valid input
+                    isValid(option);
+
+                    switch (option)
+                    {
+                    case 1:
+                        // * Display Employee Information
+                        displayUser(userIndex + 1);
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+
+                        break;
+
+                    case 4:
+
+                        break;
+
+                    case 5:
+                        // * Exit Employee Submenu
+                        exitMenu = true;
+                        break;
+                    default:
+                        cout << "\nInvalid prompt\n";
+                    }
+                }
             }
             else
             {
@@ -287,8 +328,6 @@ int main()
 
                 continue;
             }
-
-            // TODO: Employee Submenu options
         }
         else if (option == 3)
         {
