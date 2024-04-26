@@ -48,7 +48,7 @@ void addUser();
 
 void displayUsers();
 
-void displayUser(int userIndex);
+void displayUser(int id);
 
 void displayByField();
 
@@ -61,6 +61,14 @@ int isValid(int &option);
 string getCurrentDateTime();
 
 char *getPassword();
+
+void searchByNationalID(vector<User> &users);
+
+void searchByName(vector<User> &users);
+
+void searchByAge(vector<User> &users);
+
+void searchBySalary(vector<User> &users);
 
 string readSecretKey(const string &filename);
 // * Encryption Key
@@ -84,8 +92,8 @@ int main()
     // * Welcoming message
 
     // * the delay is driving me crazy >_<
-    // string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
-    // typeWriterEffect(welcomeMessage, 80);
+    string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
+    typeWriterEffect(welcomeMessage, 40);
 
     // * Fetch users from the database and saving in array to work with
     // fetchUsers(conn, Users);
@@ -93,7 +101,7 @@ int main()
     //* Dummy user data
     User users[] = {
         {1, 123456789, "0608Sbh", false, "John Doe", 30, 50000, "American", "2022-01-01", "2022-01-01"},    //* Decrypted password: 1234abc
-        {2, 987654321, ")795Ubf", true, "Jane Doe", 28, 60000, "American", "2022-01-02", "2022-01-02"},     //* Decrypted password: 4321cba
+        {2, 987654321, ")795Ubf", true, "John Doe", 30, 60000, "American", "2022-01-02", "2022-01-02"},     //* Decrypted password: 4321cba
         {3, 112233445, "0608Sbh", false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"}, //* Decrypted password: 1234abc
         {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}    //* Decrypted password: 4321cba
     };
@@ -192,7 +200,7 @@ int main()
                         cout << "\nOptions:\n";
                         cout << "1. Display all records\n";
                         cout << "2. Display by field\n";
-                        cout << "3. Display by ID\n";
+                        cout << "3. Search for a record\n";
                         cout << "4. Exit\n";
                         cout << ">> ";
                         isValid(subMenuOption);
@@ -205,9 +213,43 @@ int main()
                             displayByField();
                             break;
                         case 3:
-                            cout << "User ID:\n>> ";
-                            isValid(userID);
-                            displayUser(userID);
+                            cout << "\nSearch by:\n";
+                            cout << "1. National ID\n";
+                            cout << "2. Name\n";
+                            cout << "3. Age\n";
+                            cout << "4. Salary\n";
+                            cout << "5. Exit\n";
+                            cout << ">> ";
+                            isValid(option);
+                            cout << endl;
+
+                            switch (option)
+                            {
+                            case 1:
+                                cout << "User ID:\n>> ";
+                                searchByNationalID(Users);
+
+                                break;
+                            case 2:
+                                cout << "Name:\n>> ";
+                                searchByName(Users);
+
+                                break;
+                            case 3:
+                                cout << "Age:\n>> ";
+                                searchByAge(Users);
+                                break;
+                            case 4:
+                                cout << "Salary:\n>> ";
+                                searchBySalary(Users);
+
+                                break;
+                            case 5:
+                                break;
+                            default:
+                                cout << "\nInvalid prompt\n";
+                            }
+
                             break;
                         case 4:
                             subExitMenu = true;
@@ -288,7 +330,9 @@ int main()
 
                     cout << "\nOptions:\n";
                     cout << "1. Display Information\n";
+
                     // TODO: Add more features
+
                     cout << "5. Exit\n";
                     cout << ">> ";
 
@@ -406,6 +450,7 @@ int isValid(int &option)
     return option;
 }
 
+// * Adds a new user to the array of 'Users'
 void addUser()
 {
     User newUser;
@@ -453,14 +498,28 @@ void displayUsers()
     }
 }
 
-void displayUser(int userIndex)
+// * Search for a user by ID and display their information
+void displayUser(int id)
 {
-    userIndex -= 1;
-    cout << "ID: " << Users[userIndex].id << " | Name: " << Users[userIndex].name << " | Age: " << Users[userIndex].age
-         << " | Salary: " << Users[userIndex].salary << " | Nationality: " << Users[userIndex].nationality
-         << " | Created: " << Users[userIndex].created_at << " | Updated: " << Users[userIndex].updated_at << endl;
+    bool found = false;
+    for (int i = 0; i < sizeof(Users) / sizeof(Users[0]); i++)
+    {
+        if (Users[i].id == id)
+        {
+            cout << "ID: " << Users[i].id << " | Name: " << Users[i].name << " | Age: " << Users[i].age
+                 << " | Salary: " << Users[i].salary << " | Nationality: " << Users[i].nationality
+                 << " | Created: " << Users[i].created_at << " | Updated: " << Users[i].updated_at << endl;
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Record does not exist" << endl;
+    }
 }
 
+// * Display users by field
 void displayByField()
 {
     int option;
@@ -511,6 +570,7 @@ void displayByField()
     }
 }
 
+// * Update user information
 void updateUser(int id)
 {
     for (auto &user : Users)
@@ -581,6 +641,7 @@ void updateUser(int id)
     }
 }
 
+// * Delete user by ID
 void deleteUser(int ID)
 {
     bool found = false;
@@ -727,4 +788,157 @@ string getCurrentDateTime()
     strftime(formattedTime, 20, "%Y-%m-%d %H:%M:%S", localtime(&currentTime));
 
     return formattedTime;
+}
+
+void searchByNationalID(vector<User> &users)
+{
+    int userID;
+    bool found = false;
+    cin >> userID;
+
+    int numOfUsers = 0;
+
+    for (const auto &user : users)
+    {
+        if (user.nationalId == userID)
+        {
+            numOfUsers++;
+        }
+    }
+    if (numOfUsers)
+    {
+        cout << endl;
+        cout << numOfUsers << " users found: " << endl;
+        cout << endl;
+    }
+
+    for (const auto &user : users)
+    {
+        if (user.nationalId == userID)
+        {
+            found = true;
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+                 << " | Salary: " << user.salary << " | Nationality: " << user.nationality
+                 << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
+    if (!found)
+    {
+        cout << "User not found" << endl;
+    }
+}
+
+void searchByName(vector<User> &users)
+{
+    //  TODO: Implement search by name correctly and handle edge cases
+    string name;
+    bool found = false;
+    cin >> name;
+
+    int numOfUsers = 0;
+
+    for (const auto &user : users)
+    {
+        if (user.name == name)
+        {
+            numOfUsers++;
+        }
+    }
+    if (numOfUsers)
+    {
+        cout << endl;
+        cout << numOfUsers << " users found: " << endl;
+        cout << endl;
+    }
+
+    for (const auto &user : users)
+    {
+        if (user.name == name)
+        {
+            found = true;
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+                 << " | Salary: " << user.salary << " | Nationality: " << user.nationality
+                 << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
+    if (!found)
+    {
+        cout << "User not found" << endl;
+    }
+}
+
+void searchByAge(vector<User> &users)
+{
+    int age;
+    bool found = false;
+    cin >> age;
+
+    int numOfUsers = 0;
+
+    for (const auto &user : users)
+    {
+        if (user.age == age)
+        {
+            numOfUsers++;
+        }
+    }
+    if (numOfUsers)
+    {
+        cout << endl;
+        cout << numOfUsers << " users found: " << endl;
+        cout << endl;
+    }
+
+    for (const auto &user : users)
+    {
+        if (user.age == age)
+        {
+            found = true;
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+                 << " | Salary: " << user.salary << " | Nationality: " << user.nationality
+                 << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
+    if (!found)
+    {
+        cout << "User not found" << endl;
+    }
+}
+
+void searchBySalary(vector<User> &users)
+{
+    int salary;
+    bool found = false;
+    cin >> salary;
+
+    int numOfUsers = 0;
+
+    for (const auto &user : users)
+    {
+        if (user.salary == salary)
+        {
+            numOfUsers++;
+        }
+    }
+    if (numOfUsers)
+    {
+        cout << endl;
+        cout << numOfUsers << " users found: " << endl;
+        cout << endl;
+    }
+
+    for (const auto &user : users)
+    {
+        if (user.salary == salary)
+        {
+            found = true;
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+                 << " | Salary: " << user.salary << " | Nationality: " << user.nationality
+                 << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
+    if (!found)
+    {
+        cout << "User not found" << endl;
+    }
 }
