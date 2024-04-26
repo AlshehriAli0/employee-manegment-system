@@ -48,6 +48,10 @@ void addUser();
 
 void displayUsers();
 
+void displayUser(int userIndex);
+
+void displayByField();
+
 void updateUser(int id);
 
 void deleteUser(int ID);
@@ -121,6 +125,7 @@ int main()
 
         if (option == 1)
         {
+            // * Admin Submenu
             cout << endl;
 
             // * Admin Authentication
@@ -160,11 +165,12 @@ int main()
                 continue;
             }
 
-            // * Admin Submenu
             bool exitMenu = false;
             while (!exitMenu)
             {
                 int option;
+                int subMenuOption;
+                bool subExitMenu = false;
                 int userID;
 
                 cout << "\nOptions:\n";
@@ -181,8 +187,35 @@ int main()
                 switch (option)
                 {
                 case 1:
-                    // * Read Records
-                    displayUsers();
+                    do
+                    {
+                        cout << "\nOptions:\n";
+                        cout << "1. Display all records\n";
+                        cout << "2. Display by field\n";
+                        cout << "3. Display by ID\n";
+                        cout << "4. Exit\n";
+                        cout << ">> ";
+                        isValid(subMenuOption);
+                        switch (subMenuOption)
+                        {
+                        case 1:
+                            displayUsers();
+                            break;
+                        case 2:
+                            displayByField();
+                            break;
+                        case 3:
+                            cout << "User ID:\n>> ";
+                            isValid(userID);
+                            displayUser(userID);
+                            break;
+                        case 4:
+                            subExitMenu = true;
+                            break;
+                        default:
+                            cout << "\nInvalid prompt\n";
+                        }
+                    } while (!subExitMenu);
                     break;
 
                 case 2:
@@ -377,6 +410,64 @@ void displayUsers()
             cout << "ID: " << user.id << " | Name: " << user.name << " | (REMOVE L8) Password: " << user.password << " | Age: " << user.age
                  << " | Salary: " << user.salary << " | Nationality: " << user.nationality
                  << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+        }
+    }
+}
+
+void displayUser(int userIndex)
+{
+    userIndex -= 1;
+    cout << "ID: " << Users[userIndex].id << " | Name: " << Users[userIndex].name << " | Age: " << Users[userIndex].age
+         << " | Salary: " << Users[userIndex].salary << " | Nationality: " << Users[userIndex].nationality
+         << " | Created: " << Users[userIndex].created_at << " | Updated: " << Users[userIndex].updated_at << endl;
+}
+
+void displayByField()
+{
+    int option;
+    if (Users.empty())
+    {
+        cout << "\nNo Record Found\n";
+    }
+    else
+    {
+        cout << "\nOptions:\n";
+        cout << "1. Display Names\n";
+        cout << "2. Display Ages\n";
+        cout << "3. Display Salaries\n";
+        cout << "4. Display Nationalities\n";
+        cout << "5. Exit\n";
+        cout << ">> ";
+        isValid(option);
+
+        switch (option)
+        {
+        case 1:
+            for (const auto &user : Users)
+            {
+                cout << "ID: " << user.id << " | Name: " << user.name << endl;
+            }
+            break;
+        case 2:
+            for (const auto &user : Users)
+            {
+                cout << "ID: " << user.id << " | Age: " << user.age << endl;
+            }
+            break;
+        case 3:
+            for (const auto &user : Users)
+            {
+                cout << "ID: " << user.id << " | Salary: " << user.salary << endl;
+            }
+            break;
+        case 4:
+            for (const auto &user : Users)
+            {
+                cout << "ID: " << user.id << " | Nationality: " << user.nationality << endl;
+            }
+            break;
+        default:
+            cout << "\nInvalid prompt\n";
         }
     }
 }
