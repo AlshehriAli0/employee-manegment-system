@@ -9,7 +9,7 @@
 #include <conio.h>
 #include <thread>
 #include <chrono>
-// Os
+
 using namespace std;
 
 // !! (Ali Alshehri) I have commented out the PostgreSQL library and its functions dont remove them!
