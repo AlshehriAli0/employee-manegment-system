@@ -6,17 +6,17 @@
 - [x] Main Menu
   - [] Employee Submenu
     - [x] Login Authentication
-      - [] Display Information
+      - [X] Display Information
       - [] Save any wanted personal data
-      - [] Logout
+      - [X] Logout
   - [x] Admin SubMenu
     - [x] Login Authentication
-      - [] CRUD Operations
+      - [X] CRUD Operations
         - [x] Create an Employee's Record (including user & password for employee submenu login. # not sure if it's worth the hassle but encrypting the password column somehow would be a nice feature to implement and mention during presentation)
         - [x] Read/Display ^ Record
         - [x] Update/Edit ^ Record
         - [x] Delete ^ Record
-    - [] Logout
+    - [X] Logout
 
 ### TODO
 
@@ -28,7 +28,7 @@
 - [x] Encryption function
 - [x] user editing function
 - [] Function to save chosen data in a .txt
-- [] Function to search by any chosen field
+- [X] Function to search by any chosen field
 
 ### User Structure
 
@@ -55,4 +55,4 @@ struct User
 
 #### - Ali Alshehri
 
-- Try to make any function accept an array and return the new array updated so i can use the function and just save
+- Try to make any function accept an array and return the new array updated so i can use the function and just save [Done]
