@@ -288,14 +288,14 @@ void getConnectionLink(string &connectionLink)
 
 //     PGresult *res = PQexec(conn, "SELECT id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at FROM users");
 
-//     if (PQresultStatus(res) != PGRES_TUPLES_OK)
+// if (PQresultStatus(res) != PGRES_TUPLES_OK)
 //     {
 //         cerr << "Failed to fetch users: " << PQerrorMessage(conn) << endl;
 //         PQclear(res);
 //         return;
 //     }
 
-//     int numRows = PQntuples(res);
+// int numRows = PQntuples(res);
 
 //     for (int i = 0; i < numRows; i++)
 //     {
