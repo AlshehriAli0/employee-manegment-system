@@ -25,7 +25,7 @@
 - [x] User Deletion function
 - [] user inquiry function
 - [] Sort function
-- [] Encryption function
+- [x] Encryption function
 - [x] user editing function
 - [] Function to save chosen data in a .txt
 - [] Function to search by any chosen field
