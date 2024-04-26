@@ -6,6 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <ctime>
+#include <conio.h>
 #include <thread>
 #include <chrono>
 
@@ -52,6 +53,8 @@ void updateUser(int id);
 void deleteUser(int ID);
 
 int isValid(int &option);
+
+char *getPassword();
 
 string readSecretKey(const string &filename);
 
@@ -132,8 +135,10 @@ int main()
 
             cout << "Enter Password: ";
             string password;
-            cin >> password;
-            
+            password = getPassword();
+            cout << endl
+                 << password << endl;
+
             // * Encrypting the password to compare with the stored encrypted password
             string encryptedPassword = vigenereCipherEncrypt(password, key);
             cout << encryptedPassword << endl;
@@ -224,7 +229,10 @@ int main()
 
             cout << "Enter Password: ";
             string password;
-            cin >> password;
+            password = getPassword();
+            cout << endl
+                 << password << endl;
+            // cin >> password;
 
             // * Encrypting the password to compare with the stored encrypted password
             string encryptedPassword = vigenereCipherEncrypt(password, key);
@@ -536,4 +544,32 @@ string vigenereCipherEncrypt(const string &plaintext, const string &keyword)
     }
 
     return ciphertext;
+}
+
+// * Getting sensitive input from the user with maximum length of 30 characters
+char *getPassword()
+{
+    static char s[30] = {0};
+    int i = 0;
+    while (true)
+    {
+        char c = _getch();
+        if (c == 13) 
+            break;
+        else if (c == 8)
+        {
+            if (i > 0)
+            {
+                s[--i] = '\0';
+                cout << "\b \b";
+            }
+        }
+        else if (i < 29) 
+        {
+            s[i++] = c;
+            _putch('*');
+        }
+    }
+    s[i] = '\0'; 
+    return s;
 }
