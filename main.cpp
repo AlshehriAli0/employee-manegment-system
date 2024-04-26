@@ -95,7 +95,7 @@ int main()
     Users.insert(Users.end(), begin(users), end(users));
 
     // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
-    // * users.[attribute]
+    // * users.[attribute].
 
     //* Clean allocated memory and kill db connection
     // delete[] users;
