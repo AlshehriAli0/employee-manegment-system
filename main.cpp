@@ -91,7 +91,6 @@ int main()
 
     // * Welcoming message
 
-    // * the delay is driving me crazy >_<
     string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
     typeWriterEffect(welcomeMessage, 40);
 
@@ -326,7 +325,7 @@ int main()
                 while (!exitMenu)
                 {
                     int option;
-                    int userID;
+                    int userID = Users[userIndex].id;
 
                     cout << "\nOptions:\n";
                     cout << "1. Display Information\n";
@@ -343,7 +342,7 @@ int main()
                     {
                     case 1:
                         // * Display Employee Information
-                        displayUser(userIndex + 1);
+                        displayUser(userID);
                         break;
                     case 2:
 
@@ -463,8 +462,17 @@ void addUser()
     cout << endl;
     // * Encryption Process
     newUser.password = vigenereCipherEncrypt(newUser.password, key);
+    cout << "National ID: ";
+    isValid(newUser.nationalId);
     cout << "Age: ";
     isValid(newUser.age);
+    cout << "Employee (0) | Admin (1): ";
+    while (!(cin >> newUser.admin))
+    {
+        cin.clear();
+        cin.ignore(100, '\n');
+        cout << ">> ";
+    }
     cout << "Salary: ";
     isValid(newUser.salary);
     cout << "Nationality: ";
@@ -490,8 +498,7 @@ void displayUsers()
         cout << "Employees:" << endl;
         for (const auto &user : Users)
         {
-            // TODO: Remove Password before submission
-            cout << "ID: " << user.id << " | Name: " << user.name << " | (REMOVE L8) Password: " << user.password << " | Age: " << user.age
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
                  << " | Salary: " << user.salary << " | Nationality: " << user.nationality
                  << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
         }
@@ -502,7 +509,7 @@ void displayUsers()
 void displayUser(int id)
 {
     bool found = false;
-    for (int i = 0; i < sizeof(Users) / sizeof(Users[0]); i++)
+    for (int i = 0; i < Users.size(); i++)
     {
         if (Users[i].id == id)
         {
@@ -833,7 +840,8 @@ void searchByName(vector<User> &users)
     //  TODO: Implement search by name correctly and handle edge cases
     string name;
     bool found = false;
-    cin >> name;
+    cin.ignore();
+    getline(cin, name);
 
     int numOfUsers = 0;
 
@@ -853,12 +861,21 @@ void searchByName(vector<User> &users)
 
     for (const auto &user : users)
     {
-        if (user.name == name)
+        // * Check if length of User name and User input are equal to begin matching case-sensitivity
+        if (user.name.length() == name.length())
         {
-            found = true;
-            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
-                 << " | Salary: " << user.salary << " | Nationality: " << user.nationality
-                 << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+            // * Iterate over each letter of the user's name and convert the corresponding letter in the input to match the case-sensitivity of the user
+            for (int i = 0; i < user.name.length(); i++)
+                (user.name[i] != toupper(name[i])) ? name[i] = tolower(name[i]) : name[i] = toupper(name[i]);
+
+            // * Check after conversion if names are indeed matching
+            if (user.name == name)
+            {
+                found = true;
+                cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
+                     << " | Salary: " << user.salary << " | Nationality: " << user.nationality
+                     << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
+            }
         }
     }
     if (!found)
