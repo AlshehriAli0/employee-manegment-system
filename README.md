@@ -12,7 +12,7 @@
   - [x] Admin SubMenu
     - [x] Login Authentication
       - [X] CRUD Operations
-        - [x] Create an Employee's Record (including user & password for employee submenu login. # not sure if it's worth the hassle but encrypting the password column somehow would be a nice feature to implement and mention during presentation)
+        - [x] Create an Employee's Record (including user & password for employee submenu login.)
         - [x] Read/Display ^ Record
         - [x] Update/Edit ^ Record
         - [x] Delete ^ Record
