@@ -29,24 +29,31 @@ struct User
     string updated_at;
 };
 
-vector<User> Users; // * Dynamic Array
-int nextID = 1;     // * Assign users with unique ID's
+vector<User> Users;    // * Dynamic Array
+int nextID = 1;        // * Assign users with unique ID's
+int nationalID;        //* Initialized as global to use in functions without passing it as a parameter
+string connectionLink; // * Connection string to the database
 
 // * Prototype of functions
 
-int findUserByNationalID(int nationalID, vector<User> Users);
+// void saveUsers(const vector<User> &users);
 
-// PGconn *connectToDatabase(const string &connectionLink);
+int findUserByNationalID(vector<User> Users);
 
-// void fetchUsers(PGconn *conn, vector<User> &users);
+
+// void fetchUsers(vector<User> &users);
 
 void typeWriterEffect(const string &text, int delay);
 
 void getConnectionLink(string &connectionLink);
 
+// void deleteUserFromDB(int ID);
+
 void addUser();
 
 void displayUsers();
+
+// void updateUserInDB(int userID);
 
 void displayUser(int id);
 
@@ -76,27 +83,19 @@ const string key = readSecretKey("env.txt");
 
 string vigenereCipherEncrypt(const string &plaintext, const string &keyword);
 
+// * Get connection string from file
+
 int main()
 {
-    string connectionLink;
     getConnectionLink(connectionLink);
-
-    //* Connect to the database
-    // PGconn *conn = connectToDatabase(connectionLink);
-    // if (!conn)
-    // {
-    //     return 1;
-    // }
-    cout << endl;
 
     // * Welcoming message
 
-    // * the delay is driving me crazy >_<
     string welcomeMessage = "Welcome to the \033[1;31mEmployee Management System\033[0m\n";
     typeWriterEffect(welcomeMessage, 40);
 
     // * Fetch users from the database and saving in array to work with
-    // fetchUsers(conn, Users);
+    // fetchUsers(Users);
 
     //* Dummy user data
     User users[] = {
@@ -105,7 +104,6 @@ int main()
         {3, 112233445, "0608Sbh", false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"}, //* Decrypted password: 1234abc
         {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}    //* Decrypted password: 4321cba
     };
-
     // * Adding dummy data to the vector of Users
     Users.insert(Users.end(), begin(users), end(users));
 
@@ -114,7 +112,6 @@ int main()
 
     //* Clean allocated memory and kill db connection
     // delete[] users;
-    // PQfinish(conn);
 
     int option;
 
@@ -138,10 +135,9 @@ int main()
 
             // * Admin Authentication
             cout << "Enter National ID: ";
-            int nationalID;
             cin >> nationalID;
 
-            int userIndex = findUserByNationalID(nationalID, Users);
+            int userIndex = findUserByNationalID(Users);
 
             if (userIndex == -1)
             {
@@ -152,12 +148,9 @@ int main()
             cout << "Enter Password: ";
             string password;
             password = getPassword();
-            cout << endl
-                 << password << endl;
 
             // * Encrypting the password to compare with the stored encrypted password
             string encryptedPassword = vigenereCipherEncrypt(password, key);
-            cout << encryptedPassword << endl;
 
             if (encryptedPassword == Users[userIndex].password && Users[userIndex].admin == true)
             {
@@ -263,12 +256,16 @@ int main()
                 case 2:
                     //* Create Record
                     addUser();
+                    // saveUsers(Users);
+                    // fetchUsers(Users);
+
                     break;
                 case 3:
                     //* Delete Record
                     cout << "User ID:\n>> ";
                     isValid(userID);
                     deleteUser(userID);
+                    // deleteUserFromDB(userID);
                     break;
 
                 case 4:
@@ -276,6 +273,7 @@ int main()
                     cout << "User ID:\n>> ";
                     isValid(userID);
                     updateUser(userID);
+                    // updateUserInDB(userID);
                     break;
 
                 case 5:
@@ -294,10 +292,9 @@ int main()
 
             // * Employee Authentication
             cout << "Enter National ID: ";
-            int nationalID;
             cin >> nationalID;
 
-            int userIndex = findUserByNationalID(nationalID, Users);
+            int userIndex = findUserByNationalID(Users);
 
             if (userIndex == -1)
             {
@@ -308,13 +305,9 @@ int main()
             cout << "Enter Password: ";
             string password;
             password = getPassword();
-            cout << endl
-                 << password << endl;
-            // cin >> password;
 
             // * Encrypting the password to compare with the stored encrypted password
             string encryptedPassword = vigenereCipherEncrypt(password, key);
-            cout << encryptedPassword << endl;
 
             if (encryptedPassword == Users[userIndex].password && Users[userIndex].admin == false)
             {
@@ -401,27 +394,33 @@ void getConnectionLink(string &connectionLink)
 }
 
 // * Function to fetch users from the database
-// void fetchUsers(PGconn *conn, vector<User> &users)
+// void fetchUsers(vector<User> &users)
 // {
+//     PGconn *conn = PQconnectdb(connectionLink.c_str());
+//     if (PQstatus(conn) != CONNECTION_OK)
+//     {
+//         cerr << "Failed to connect to the database: " << PQerrorMessage(conn) << endl;
+//         PQfinish(conn);
+//         return;
+//     }
+
 //     users.clear();
-
 //     PGresult *res = PQexec(conn, "SELECT id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at FROM users");
-
 //     if (PQresultStatus(res) != PGRES_TUPLES_OK)
 //     {
 //         cerr << "Failed to fetch users: " << PQerrorMessage(conn) << endl;
 //         PQclear(res);
+//         PQfinish(conn);
 //         return;
 //     }
 
 //     int numRows = PQntuples(res);
-
 //     for (int i = 0; i < numRows; i++)
 //     {
 //         User newUser;
 //         newUser.id = atoi(PQgetvalue(res, i, 0));
 //         newUser.nationalId = atoi(PQgetvalue(res, i, 1));
-//         newUser.password = atoi(PQgetvalue(res, i, 2));
+//         newUser.password = PQgetvalue(res, i, 2);
 //         newUser.admin = (PQgetvalue(res, i, 3)[0] == 't');
 //         newUser.name = PQgetvalue(res, i, 4);
 //         newUser.age = atoi(PQgetvalue(res, i, 5));
@@ -429,11 +428,10 @@ void getConnectionLink(string &connectionLink)
 //         newUser.nationality = PQgetvalue(res, i, 7);
 //         newUser.created_at = PQgetvalue(res, i, 8);
 //         newUser.updated_at = PQgetvalue(res, i, 9);
-
 //         users.push_back(newUser);
 //     }
-
 //     PQclear(res);
+//     PQfinish(conn);
 // }
 
 // * (Ali Alshehri) put your functions below this line
@@ -458,7 +456,10 @@ void addUser()
     cout << "Name: ";
     cin.ignore();
     getline(cin, newUser.name);
-    cout << "Password: ";
+    cout << "Enter National ID: ";
+    isValid(newUser.nationalId);
+    cout
+        << "Password: ";
     newUser.password = getPassword();
     cout << endl;
     // * Encryption Process
@@ -469,6 +470,7 @@ void addUser()
     isValid(newUser.salary);
     cout << "Nationality: ";
     cin >> newUser.nationality;
+    newUser.admin = "false";
 
     newUser.created_at = getCurrentDateTime();
     newUser.updated_at = "";
@@ -491,7 +493,7 @@ void displayUsers()
         for (const auto &user : Users)
         {
             // TODO: Remove Password before submission
-            cout << "ID: " << user.id << " | Name: " << user.name << " | (REMOVE L8) Password: " << user.password << " | Age: " << user.age
+            cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
                  << " | Salary: " << user.salary << " | Nationality: " << user.nationality
                  << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
         }
@@ -573,10 +575,12 @@ void displayByField()
 // * Update user information
 void updateUser(int id)
 {
+    bool found = false;
     for (auto &user : Users)
     {
         if (user.id == id)
         {
+            found = true;
             int option;
             bool updated;
             do
@@ -635,10 +639,13 @@ void updateUser(int id)
             {
                 // * Saves when the specified user info was last updated in 'updated_at'
                 user.updated_at = getCurrentDateTime();
+
                 cout << "\nUpdated Successfully\n";
             }
         }
     }
+    if (!found)
+        cout << "User not found" << endl;
 }
 
 // * Delete user by ID
@@ -667,7 +674,7 @@ void deleteUser(int ID)
 }
 
 // * Function to search for a user by ID
-int findUserByNationalID(int nationalID, vector<User> Users)
+int findUserByNationalID(vector<User> Users)
 {
     for (int i = 0; i < Users.size(); i++)
     {
@@ -689,23 +696,8 @@ void typeWriterEffect(const string &text, int delay)
     }
 }
 
-// TODO: Function to save users to the database
 
-// * Connect to Db
-// PGconn *connectToDatabase(const string &connectionLink)
-// {
-//     PGconn *conn = PQconnectdb(connectionLink.c_str());
-//     if (PQstatus(conn) == CONNECTION_BAD)
-//     {
-//         cerr << "Connection to database failed: " << PQerrorMessage(conn) << endl;
-//         PQfinish(conn);
-//         return nullptr;
-//     }
-//     else
-//     {
-//         return conn;
-//     }
-// }
+
 
 // * Read encryption key from file which
 string readSecretKey(const string &filename)
@@ -942,3 +934,153 @@ void searchBySalary(vector<User> &users)
         cout << "User not found" << endl;
     }
 }
+
+// * Function to save to the db
+// void saveUsers(const vector<User> &users)
+// {
+//     PGconn *conn = PQconnectdb(connectionLink.c_str());
+//     if (PQstatus(conn) != CONNECTION_OK)
+//     {
+//         cerr << "Failed to connect to the database: " << PQerrorMessage(conn) << endl;
+//         PQfinish(conn);
+//         return;
+//     }
+
+//     if (!users.empty())
+//     {
+//         const User &user = users.back();
+
+//         const char *paramValues[9];
+//         string query = "INSERT INTO users (national_id, password, admin, name, age, salary, nationality, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
+
+//         paramValues[0] = to_string(user.nationalId).c_str();
+//         paramValues[1] = user.password.c_str();
+//         paramValues[2] = user.admin ? "true" : "false";
+//         paramValues[3] = user.name.c_str();
+//         paramValues[4] = to_string(user.age).c_str();
+//         paramValues[5] = to_string(user.salary).c_str();
+//         paramValues[6] = user.nationality.c_str();
+
+//         paramValues[7] = !user.created_at.empty() ? user.created_at.c_str() : "now()";
+//         paramValues[8] = !user.updated_at.empty() ? user.updated_at.c_str() : "now()";
+
+//         int paramLengths[9];
+//         int paramFormats[9];
+
+//         for (int i = 0; i < 9; ++i)
+//         {
+//             paramLengths[i] = -1;
+//             paramFormats[i] = 0;
+//         }
+
+//         PGresult *res = PQexecParams(conn, query.c_str(), 9, nullptr, paramValues, paramLengths, paramFormats, 0);
+
+//         if (PQresultStatus(res) != PGRES_COMMAND_OK)
+//         {
+//             cerr << "Failed to save user: " << PQerrorMessage(conn) << endl;
+//         }
+
+//         PQclear(res);
+//     }
+
+//     PQfinish(conn);
+// }
+
+// * Delete user from the database
+// void deleteUserFromDB(int ID)
+// {
+
+//     bool found = false;
+//     for (const auto &user : Users)
+//     {
+//         if (user.id == ID)
+//         {
+//             found = true;
+//             break;
+//         }
+//     }
+
+//     if (!found)
+//     {
+//         return;
+//     }
+
+//     PGconn *conn = PQconnectdb(connectionLink.c_str());
+//     if (PQstatus(conn) != CONNECTION_OK)
+//     {
+//         cerr << "Failed to connect to the database: " << PQerrorMessage(conn) << endl;
+//         PQfinish(conn);
+//         return;
+//     }
+
+//     string query = "DELETE FROM users WHERE id = $1";
+//     const char *paramValues[1] = {to_string(ID).c_str()};
+//     int paramLengths[1] = {-1};
+//     int paramFormats[1] = {0};
+
+//     PGresult *res = PQexecParams(conn, query.c_str(), 1, nullptr, paramValues, paramLengths, paramFormats, 0);
+//     if (PQresultStatus(res) != PGRES_COMMAND_OK)
+//     {
+//         cerr << "Failed to delete user: " << PQerrorMessage(conn) << endl;
+//     }
+//     else
+//     {
+//         cout << "User with ID " << ID << " deleted from the database." << endl;
+//     }
+
+//     PQclear(res);
+//     PQfinish(conn);
+// }
+
+// * Function to save update to the db
+// void updateUserInDB(int userID)
+// {
+//     User updatedUser;
+//     bool found = false;
+//     for (const auto &user : Users)
+//     {
+//         if (user.id == userID)
+//         {
+//             updatedUser = user;
+//             found = true;
+//             break;
+//         }
+//     }
+
+//     if (!found)
+//     {
+//         return;
+//     }
+
+//     PGconn *conn = PQconnectdb(connectionLink.c_str());
+//     if (PQstatus(conn) != CONNECTION_OK)
+//     {
+//         cerr << "Failed to connect to the database: " << PQerrorMessage(conn) << endl;
+//         PQfinish(conn);
+//         return;
+//     }
+
+//     string query = "UPDATE users SET name = $1, password = $2, age = $3, salary = $4, nationality = $5, updated_at = now() WHERE id = $6";
+//     const char *paramValues[6] = {
+//         updatedUser.name.c_str(),
+//         updatedUser.password.c_str(),
+//         to_string(updatedUser.age).c_str(),
+//         to_string(updatedUser.salary).c_str(),
+//         updatedUser.nationality.c_str(),
+//         to_string(userID).c_str()};
+//     int paramLengths[6] = {-1, -1, -1, -1, -1, -1};
+//     int paramFormats[6] = {0, 0, 0, 0, 0, 0};
+
+//     PGresult *res = PQexecParams(conn, query.c_str(), 6, nullptr, paramValues, paramLengths, paramFormats, 0);
+//     if (PQresultStatus(res) != PGRES_COMMAND_OK)
+//     {
+//         cerr << "Failed to update user in the database: " << PQerrorMessage(conn) << endl;
+//     }
+//     else
+//     {
+//         cout << "User with ID " << userID << " updated in the database." << endl;
+//     }
+
+//     PQclear(res);
+//     PQfinish(conn);
+// }
