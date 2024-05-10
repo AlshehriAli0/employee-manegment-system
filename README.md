@@ -23,7 +23,7 @@
 - [x] main followed by sub menus to start the program
 - [x] User Creation function
 - [x] User Deletion function
-- [] user inquiry function
+- [x] user inquiry function
 - [] Sort function
 - [x] Encryption function
 - [x] user editing function
