@@ -9,6 +9,7 @@
 #include <conio.h>
 #include <thread>
 #include <chrono>
+#include <algorithm>
 
 using namespace std;
 
@@ -40,7 +41,6 @@ string connectionLink; // * Connection string to the database
 
 int findUserByNationalID(vector<User> Users);
 
-
 // void fetchUsers(vector<User> &users);
 
 void typeWriterEffect(const string &text, int delay);
@@ -71,13 +71,40 @@ char *getPassword();
 
 void searchByNationalID(vector<User> &users);
 
+int returnNewID();
+
 void searchByName(vector<User> &users);
 
 void searchByAge(vector<User> &users);
 
 void searchBySalary(vector<User> &users);
 
+bool compareById(const User &u1, const User &u2);
+
+bool compareByName(const User &u1, const User &u2);
+
+bool compareByAge(const User &u1, const User &u2);
+
+bool compareBySalary(const User &u1, const User &u2);
+
+bool compareByCreatedAt(const User &u1, const User &u2);
+
+bool compareByUpdatedAt(const User &u1, const User &u2);
+
+void sortById(std::vector<User> &users);
+
+void sortByName(std::vector<User> &users);
+
+void sortByAge(std::vector<User> &users);
+
+void sortBySalary(std::vector<User> &users);
+
+void sortByCreatedAt(std::vector<User> &users);
+
+void sortByUpdatedAt(std::vector<User> &users);
+
 string readSecretKey(const string &filename);
+
 // * Encryption Key
 const string key = readSecretKey("env.txt");
 
@@ -99,10 +126,10 @@ int main()
 
     //* Dummy user data
     User users[] = {
-        {1, 123456789, "0608Sbh", false, "John Doe", 30, 50000, "American", "2022-01-01", "2022-01-01"},    //* Decrypted password: 1234abc
-        {2, 987654321, ")795Ubf", true, "John Doe", 30, 60000, "American", "2022-01-02", "2022-01-02"},     //* Decrypted password: 4321cba
-        {3, 112233445, "0608Sbh", false, "Alice Smith", 35, 70000, "Canadian", "2022-01-03", "2022-01-03"}, //* Decrypted password: 1234abc
-        {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2022-01-04", "2022-01-04"}    //* Decrypted password: 4321cba
+        {1, 123456789, "0608Sbh", false, "John Doe", 37, 50800, "American", "2022-01-01 12:19:45", "2022-01-01"},  //* Decrypted password: 1234abc
+        {2, 987654321, ")795Ubf", true, "John Doe", 35, 6000, "American", "2025-01-02 1:19:45", "2022-01-02"},     //* Decrypted password: 4321cba
+        {3, 112233445, "0608Sbh", false, "Alice Smith", 67, 7000, "Canadian", "2020-01-03 4:19:45", "2022-01-03"}, //* Decrypted password: 1234abc
+        {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2021-01-04 7:19:45", "2022-01-04"}   //* Decrypted password: 4321cba
     };
     // * Adding dummy data to the vector of Users
     Users.insert(Users.end(), begin(users), end(users));
@@ -155,7 +182,7 @@ int main()
             if (encryptedPassword == Users[userIndex].password && Users[userIndex].admin == true)
             {
                 cout << endl;
-                cout << "Authentication successful. Entering admin menu.\n";
+                cout << "\nAuthentication successful. Entering admin menu.\n";
                 cout << "Welcome " << Users[userIndex].name << endl;
             }
             else
@@ -194,7 +221,8 @@ int main()
                         cout << "1. Display all records\n";
                         cout << "2. Display by field\n";
                         cout << "3. Search for a record\n";
-                        cout << "4. Exit\n";
+                        cout << "4. Sort by field\n";
+                        cout << "5. Exit\n";
                         cout << ">> ";
                         isValid(subMenuOption);
                         switch (subMenuOption)
@@ -244,7 +272,59 @@ int main()
                             }
 
                             break;
+
                         case 4:
+                            cout << "\nSort by: \n";
+                            cout << "1. User ID\n";
+                            cout << "2. Name\n";
+                            cout << "3. Age\n";
+                            cout << "4. Salary\n";
+                            cout << "5. Created At\n";
+                            cout << "6. Updated At\n";
+                            cout << "7. Exit\n";
+                            cout << ">> ";
+                            isValid(option);
+                            cout << endl;
+
+                            switch (option)
+                            {
+                            case 1:
+                                cout << "User ID:\n>> ";
+                                sortById(Users);
+
+                                break;
+                            case 2:
+                                cout << "Name:\n>> ";
+                                sortByName(Users);
+
+                                break;
+                            case 3:
+                                cout << "Age:\n>> ";
+                                sortByAge(Users);
+                                break;
+                            case 4:
+                                cout << "Salary:\n>> ";
+                                sortBySalary(Users);
+
+                                break;
+                            case 5:
+                                cout << "Created at:\n>> ";
+                                sortByCreatedAt(Users);
+
+                                break;
+                            case 6:
+                                cout << "Updated at:\n>> ";
+                                sortByUpdatedAt(Users);
+
+                                break;
+                            case 7:
+                                break;
+                            default:
+                                cout << "\nInvalid prompt\n";
+                            }
+                            break;
+
+                        case 5:
                             subExitMenu = true;
                             break;
                         default:
@@ -361,7 +441,7 @@ int main()
             else
             {
                 cout << endl;
-                Users[userIndex].admin == true ? cout << "Authentication failed. Use the admin login instead. Exiting.\n" : cout << "Authentication failed. Wrong credentials.\n";
+                Users[userIndex].admin == true ? cout << "Authentication failed. Use the admin 55 login instead. Exiting.\n" : cout << "Authentication failed. Wrong credentials.\n";
 
                 continue;
             }
@@ -405,7 +485,8 @@ void getConnectionLink(string &connectionLink)
 //     }
 
 //     users.clear();
-//     PGresult *res = PQexec(conn, "SELECT id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at FROM users");
+
+//     PGresult *res = PQexec(conn, "SELECT id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at FROM users ORDER BY id ASC");
 //     if (PQresultStatus(res) != PGRES_TUPLES_OK)
 //     {
 //         cerr << "Failed to fetch users: " << PQerrorMessage(conn) << endl;
@@ -430,6 +511,7 @@ void getConnectionLink(string &connectionLink)
 //         newUser.updated_at = PQgetvalue(res, i, 9);
 //         users.push_back(newUser);
 //     }
+
 //     PQclear(res);
 //     PQfinish(conn);
 // }
@@ -452,12 +534,12 @@ int isValid(int &option)
 void addUser()
 {
     User newUser;
-    newUser.id = nextID++; // * Modifies global variable of nextID to assign unique ID to users
+
+    newUser.id = returnNewID(); // * Modifies global variable of nextID to assign unique ID to users
+
     cout << "Name: ";
     cin.ignore();
     getline(cin, newUser.name);
-    cout << "Enter National ID: ";
-    isValid(newUser.nationalId);
     cout
         << "Password: ";
     newUser.password = getPassword();
@@ -479,7 +561,6 @@ void addUser()
     isValid(newUser.salary);
     cout << "Nationality: ";
     cin >> newUser.nationality;
-    newUser.admin = "false";
 
     newUser.created_at = getCurrentDateTime();
     newUser.updated_at = "";
@@ -704,9 +785,6 @@ void typeWriterEffect(const string &text, int delay)
         this_thread::sleep_for(chrono::milliseconds(delay));
     }
 }
-
-
-
 
 // * Read encryption key from file which
 string readSecretKey(const string &filename)
@@ -969,30 +1047,30 @@ void searchBySalary(vector<User> &users)
 //     {
 //         const User &user = users.back();
 
-//         const char *paramValues[9];
-//         string query = "INSERT INTO users (national_id, password, admin, name, age, salary, nationality, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
+//         const char *paramValues[10];
+//         string query = "INSERT INTO users (id, national_id, password, admin, name, age, salary, nationality, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)";
 
-//         paramValues[0] = to_string(user.nationalId).c_str();
-//         paramValues[1] = user.password.c_str();
-//         paramValues[2] = user.admin ? "true" : "false";
-//         paramValues[3] = user.name.c_str();
-//         paramValues[4] = to_string(user.age).c_str();
-//         paramValues[5] = to_string(user.salary).c_str();
-//         paramValues[6] = user.nationality.c_str();
+//         paramValues[0] = to_string(user.id).c_str();
+//         paramValues[1] = to_string(user.nationalId).c_str();
+//         paramValues[2] = user.password.c_str();
+//         paramValues[3] = user.admin ? "true" : "false";
+//         paramValues[4] = user.name.c_str();
+//         paramValues[5] = to_string(user.age).c_str();
+//         paramValues[6] = to_string(user.salary).c_str();
+//         paramValues[7] = user.nationality.c_str();
+//         paramValues[8] = !user.created_at.empty() ? user.created_at.c_str() : "now()";
+//         paramValues[9] = !user.updated_at.empty() ? user.updated_at.c_str() : "now()";
 
-//         paramValues[7] = !user.created_at.empty() ? user.created_at.c_str() : "now()";
-//         paramValues[8] = !user.updated_at.empty() ? user.updated_at.c_str() : "now()";
+//         int paramLengths[10];
+//         int paramFormats[10];
 
-//         int paramLengths[9];
-//         int paramFormats[9];
-
-//         for (int i = 0; i < 9; ++i)
+//         for (int i = 0; i < 10; ++i)
 //         {
 //             paramLengths[i] = -1;
 //             paramFormats[i] = 0;
 //         }
 
-//         PGresult *res = PQexecParams(conn, query.c_str(), 9, nullptr, paramValues, paramLengths, paramFormats, 0);
+//         PGresult *res = PQexecParams(conn, query.c_str(), 10, nullptr, paramValues, paramLengths, paramFormats, 0);
 
 //         if (PQresultStatus(res) != PGRES_COMMAND_OK)
 //         {
@@ -1103,3 +1181,80 @@ void searchBySalary(vector<User> &users)
 //     PQclear(res);
 //     PQfinish(conn);
 // }
+
+// * comparison criteria
+bool compareById(const User &u1, const User &u2)
+{
+    return u1.id < u2.id;
+}
+
+bool compareByName(const User &u1, const User &u2)
+{
+    return u1.name < u2.name;
+}
+
+bool compareByAge(const User &u1, const User &u2)
+{
+    return u1.age < u2.age;
+}
+
+bool compareBySalary(const User &u1, const User &u2)
+{
+    return u1.salary < u2.salary;
+}
+
+bool compareByCreatedAt(const User &u1, const User &u2)
+{
+    return u1.created_at < u2.created_at;
+}
+
+bool compareByUpdatedAt(const User &u1, const User &u2)
+{
+    return u1.updated_at < u2.updated_at;
+}
+
+//* Sorting functions
+void sortById(vector<User> &users)
+{
+    sort(users.begin(), users.end(), compareById);
+}
+
+void sortByName(vector<User> &users)
+{
+    sort(users.begin(), users.end(), compareByName);
+}
+
+void sortByAge(vector<User> &users)
+{
+    sort(users.begin(), users.end(), compareByAge);
+}
+
+void sortBySalary(vector<User> &users)
+{
+    sort(users.begin(), users.end(), compareBySalary);
+}
+
+void sortByCreatedAt(vector<User> &users)
+{
+    sort(users.begin(), users.end(), compareByCreatedAt);
+}
+
+void sortByUpdatedAt(vector<User> &users)
+{
+    sort(users.begin(), users.end(), compareByUpdatedAt);
+}
+
+int returnNewID()
+{
+    int maxID = 0;
+    for (const auto &user : Users)
+    {
+        if (user.id > maxID)
+        {
+            maxID = user.id;
+        }
+    } // * Finding the maximum ID in the array
+
+    nextID = maxID + 1; // * Assigning next ID to the global variable
+    return nextID++;
+}
