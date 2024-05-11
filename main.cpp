@@ -737,7 +737,7 @@ void deleteUser(int ID)
     for (auto currentUserIterator = Users.begin(); currentUserIterator != Users.end(); ++currentUserIterator)
     {
         //* Check if the current iterator's ID matches the specified ID
-        if ((*currentUserIterator).id == ID)
+        if ((*currentUserIterator).id == ID && (*currentUserIterator).admin == false)
         {
             //* Remove user from array
             currentUserIterator = Users.erase(currentUserIterator);
@@ -1075,19 +1075,25 @@ void searchBySalary(vector<User> &users)
 // * Delete user from the database
 // void deleteUserFromDB(int ID)
 // {
-
 //     bool found = false;
+//     bool isAdmin = false;
 //     for (const auto &user : Users)
 //     {
 //         if (user.id == ID)
 //         {
 //             found = true;
+//             isAdmin = user.admin;
 //             break;
 //         }
 //     }
 
-//     if (!found)
+//     // * Check if the user is an admin and if so, don't delete it
+//     if (!found || isAdmin)
 //     {
+//         if (isAdmin)
+//         {
+//             cout << "Cannot delete an admin user.\n" << endl;
+//         }
 //         return;
 //     }
 
