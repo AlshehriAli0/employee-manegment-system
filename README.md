@@ -4,10 +4,10 @@
 
 - [x] Connect to db
 - [x] Main Menu
-  - [] Employee Submenu
+  - [x] Employee Submenu
     - [x] Login Authentication
       - [X] Display Information
-      - [] Save any wanted personal data
+      - [x] Save any wanted personal data
       - [X] Logout
   - [x] Admin SubMenu
     - [x] Login Authentication
@@ -27,7 +27,7 @@
 - [x] Sort function
 - [x] Encryption function
 - [x] user editing function
-- [] Function to save chosen data in a .txt
+- [x] Function to save chosen data in a .txt
 - [X] Function to search by any chosen field
 
 ### User Structure
