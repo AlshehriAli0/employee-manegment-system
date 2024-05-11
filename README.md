@@ -24,7 +24,7 @@
 - [x] User Creation function
 - [x] User Deletion function
 - [x] user inquiry function
-- [] Sort function
+- [x] Sort function
 - [x] Encryption function
 - [x] user editing function
 - [] Function to save chosen data in a .txt
