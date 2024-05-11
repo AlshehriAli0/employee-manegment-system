@@ -206,7 +206,8 @@ int main()
                 cout << "2. Add record\n";
                 cout << "3. Delete a record\n";
                 cout << "4. Update a record\n";
-                cout << "5. Exit\n";
+                cout << "5. Sort records\n";
+                cout << "6. Exit\n";
                 cout << ">> ";
 
                 // * Wait for valid input
@@ -221,8 +222,7 @@ int main()
                         cout << "1. Display all records\n";
                         cout << "2. Display by field\n";
                         cout << "3. Search for a record\n";
-                        cout << "4. Sort by field\n";
-                        cout << "5. Exit\n";
+                        cout << "4. Exit\n";
                         cout << ">> ";
                         isValid(subMenuOption);
                         switch (subMenuOption)
@@ -274,59 +274,9 @@ int main()
                             break;
 
                         case 4:
-                            cout << "\nSort by: \n";
-                            cout << "1. User ID\n";
-                            cout << "2. Name\n";
-                            cout << "3. Age\n";
-                            cout << "4. Salary\n";
-                            cout << "5. Created At\n";
-                            cout << "6. Updated At\n";
-                            cout << "7. Exit\n";
-                            cout << ">> ";
-                            isValid(option);
-                            cout << endl;
-
-                            switch (option)
-                            {
-                            case 1:
-                                cout << "User ID:\n>> ";
-                                sortById(Users);
-
-                                break;
-                            case 2:
-                                cout << "Name:\n>> ";
-                                sortByName(Users);
-
-                                break;
-                            case 3:
-                                cout << "Age:\n>> ";
-                                sortByAge(Users);
-                                break;
-                            case 4:
-                                cout << "Salary:\n>> ";
-                                sortBySalary(Users);
-
-                                break;
-                            case 5:
-                                cout << "Created at:\n>> ";
-                                sortByCreatedAt(Users);
-
-                                break;
-                            case 6:
-                                cout << "Updated at:\n>> ";
-                                sortByUpdatedAt(Users);
-
-                                break;
-                            case 7:
-                                break;
-                            default:
-                                cout << "\nInvalid prompt\n";
-                            }
-                            break;
-
-                        case 5:
                             subExitMenu = true;
                             break;
+
                         default:
                             cout << "\nInvalid prompt\n";
                         }
@@ -357,6 +307,52 @@ int main()
                     break;
 
                 case 5:
+                    // * Sort records
+                    cout << "\nSort by: \n";
+                    cout << "1. User ID\n";
+                    cout << "2. Name\n";
+                    cout << "3. Age\n";
+                    cout << "4. Salary\n";
+                    cout << "5. Created At\n";
+                    cout << "6. Updated At\n";
+                    cout << "7. Exit\n";
+                    cout << ">> ";
+                    isValid(option);
+                    cout << endl;
+
+                    switch (option)
+                    {
+                    case 1:
+                        sortById(Users);
+
+                        break;
+                    case 2:
+                        sortByName(Users);
+
+                        break;
+                    case 3:
+                        sortByAge(Users);
+                        break;
+                    case 4:
+                        sortBySalary(Users);
+
+                        break;
+                    case 5:
+                        sortByCreatedAt(Users);
+
+                        break;
+                    case 6:
+                        sortByUpdatedAt(Users);
+
+                        break;
+                    case 7:
+                        break;
+                    default:
+                        cout << "\nInvalid prompt\n";
+                    }
+                    break;
+
+                case 6:
                     // * Exit Admin Submenu
                     exitMenu = true;
                     break;
@@ -403,10 +399,11 @@ int main()
 
                     cout << "\nOptions:\n";
                     cout << "1. Display Information\n";
+                    cout << "2. Save personal data in a .txt\n";
 
-                    // TODO: Add more features
+                    // TODO: Add more features later
 
-                    cout << "5. Exit\n";
+                    cout << "3. Exit\n";
                     cout << ">> ";
 
                     // * Wait for valid input
@@ -421,18 +418,12 @@ int main()
                     case 2:
 
                         break;
+
                     case 3:
-
-                        break;
-
-                    case 4:
-
-                        break;
-
-                    case 5:
                         // * Exit Employee Submenu
                         exitMenu = true;
                         break;
+
                     default:
                         cout << "\nInvalid prompt\n";
                     }
@@ -441,7 +432,7 @@ int main()
             else
             {
                 cout << endl;
-                Users[userIndex].admin == true ? cout << "Authentication failed. Use the admin 55 login instead. Exiting.\n" : cout << "Authentication failed. Wrong credentials.\n";
+                Users[userIndex].admin == true ? cout << "Authentication failed. Use the admin login instead. Exiting.\n" : cout << "Authentication failed. Wrong credentials.\n";
 
                 continue;
             }
@@ -582,7 +573,6 @@ void displayUsers()
         cout << "Employees:" << endl;
         for (const auto &user : Users)
         {
-            // TODO: Remove Password before submission
             cout << "ID: " << user.id << " | Name: " << user.name << " | Age: " << user.age
                  << " | Salary: " << user.salary << " | Nationality: " << user.nationality
                  << " | Created: " << user.created_at << " | Updated: " << user.updated_at << endl;
@@ -909,7 +899,6 @@ void searchByNationalID(vector<User> &users)
 
 void searchByName(vector<User> &users)
 {
-    //  TODO: Implement search by name correctly and handle edge cases
     string name;
     bool found = false;
     cin.ignore();
