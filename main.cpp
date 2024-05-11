@@ -91,17 +91,17 @@ bool compareByCreatedAt(const User &u1, const User &u2);
 
 bool compareByUpdatedAt(const User &u1, const User &u2);
 
-void sortById(std::vector<User> &users);
+void sortById(vector<User> &users);
 
-void sortByName(std::vector<User> &users);
+void sortByName(vector<User> &users);
 
-void sortByAge(std::vector<User> &users);
+void sortByAge(vector<User> &users);
 
-void sortBySalary(std::vector<User> &users);
+void sortBySalary(vector<User> &users);
 
-void sortByCreatedAt(std::vector<User> &users);
+void sortByCreatedAt(vector<User> &users);
 
-void sortByUpdatedAt(std::vector<User> &users);
+void sortByUpdatedAt(vector<User> &users);
 
 string readSecretKey(const string &filename);
 
