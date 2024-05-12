@@ -55,7 +55,7 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
 
 
 
-## Our Pride: Speed and Performance ⚡️
+## Speed and Performance ⚡️
 
 #### One of the key features we take pride in is the exceptional speed and performance of the Employee Management System. Thanks to our optimized algorithms and efficient data handling, you'll experience lightning-fast response times, ensuring a smooth and seamless user experience.
 
