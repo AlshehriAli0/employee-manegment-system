@@ -34,6 +34,7 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
 
 - Logout 🚪: Administrators can log out of the system after completing their tasks.
 
+<br/><br/>
 
 
 ## Setup 🔧
@@ -53,12 +54,14 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
 - Start the main.exe, and now you're up and running. 🏡
 
 
+<br/><br/>
 
 
 ## Speed and Performance ⚡️
 
 #### One of the key features we take pride in is the exceptional speed and performance of the Employee Management System. Thanks to our optimized algorithms and efficient data handling, you'll experience lightning-fast response times, ensuring a smooth and seamless user experience.
 
+<br/><br/>
 
 
 ## Feature Plans 🚀
@@ -68,6 +71,7 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
 - Employee Daily Performance/Attendance Tracking: We aim to introduce a feature that allows administrators to track and record daily performance and attendance for each employee.
 - Automated Weekly Reports with AI: Leveraging the power of AI, we will implement an automated weekly report generation system. These reports will be sent to administrators via email, providing comprehensive insights and analysis on employee performance and attendance.
 
+<br/><br/>
 
 
 ## Contributors 🌟
