@@ -66,17 +66,22 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
 
 ### To use the Employee Management System effectively, follow these steps:
 
-- Connect to the database by providing the necessary connection details. 🔌
-- Start the application, and navigate through the Main Menu to access the desired submenu (Employee Submenu or Admin Submenu). 🏡
+- Create an env.txt file in the same directory and provide the PostgreSQL database connection string as the first line and the encryption as the second line. 🔌
+- Install the [libpq](https://www.postgresql.org/docs/9.5/libpq.html) library and set up all the configurations.
+- Compile the program using:
+```zsh
+  g++ -I"C:\Program Files\PostgreSQL\16\include" -L"C:\Program Files\PostgreSQL\16\lib" -o main.exe main.cpp -lpq
+```
+- Start the main.exe, and now you're up and running. 🏡
 
-### For the Employee Submenu:
+#### For the Employee Submenu:
 
 - Log in using your employee credentials. 🔐
 - View and manage your personal information as needed. 👤
 - Save any desired personal data for future reference. 💾
 - Log out when finished. 🚪
 
-### For the Admin Submenu:
+#### For the Admin Submenu:
 
 - Log in using your admin credentials. 🔒
 - Perform CRUD operations on employee records as required. ⚙️
