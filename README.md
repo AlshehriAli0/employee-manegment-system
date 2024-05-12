@@ -44,7 +44,7 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
   In the env.txt file, add the following lines:
   - Line 1: Your PostgreSQL database connection string.
   - Line 2: The encryption secret key for data security.
-- Install the [libpq](https://www.postgresql.org/docs/9.5/libpq.html) library and set up all the configurations.🔌
+- Install the [libpq](https://www.postgresql.org/docs/9.5/libpq.html) library and set up all the library and headers configurations.🔌
 
 - Compile the program using:
 ```zsh
