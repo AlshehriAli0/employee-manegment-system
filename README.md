@@ -22,7 +22,7 @@ The Employee Management System offers two main submenus: Employee Submenu and Ad
 
 ### Admin Submenu 👑
 
-###### The Admin Submenu provides administrators with powerful tools to manage employee records efficiently:
+##### The Admin Submenu provides administrators with powerful tools to manage employee records efficiently:
 
 - Login Authentication 🔒: Administrators can log in using their credentials to access the admin panel.
 ### CRUD Operations ⚙️:
