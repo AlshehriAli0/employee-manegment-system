@@ -13,6 +13,7 @@
 
 using namespace std;
 
+
 // * Main schema of the User table
 struct User
 {
@@ -24,7 +25,6 @@ struct User
     int age;
     int salary;
     string nationality;
-    string performance;
     string created_at;
     string updated_at;
 };
@@ -65,10 +65,6 @@ void displayByField();
 void updateUser(int id);
 
 void deleteUser(int ID);
-
-void viewPerformance(int ID);
-
-void evaluateUser(int ID);
 
 int isValid(int &option);
 
@@ -129,18 +125,17 @@ int main()
     typeWriterEffect(welcomeMessage, 40);
 
     // * Fetch users from the database and saving in array to work with
-    // fetchUsers(Users);
+    fetchUsers(Users);
 
-    // * Dummy user data
+    //* Dummy user data
     // User users[] = {
-    //     {1, 123456789, "0608Sbh", false, "John Doe", 37, 50800, "American", "", "2022-01-01 12:19:45", "2022-01-01"},  //* Decrypted password: 1234abc
-    //     {2, 987654321, ")795Ubf", true, "John Doe", 35, 6000, "American", "", "2025-01-02 1:19:45", "2022-01-02"},     //* Decrypted password: 4321cba
-    //     {3, 112233445, "0608Sbh", false, "Alice Smith", 67, 7000, "Canadian", "", "2020-01-03 4:19:45", "2022-01-03"}, //* Decrypted password: 1234abc
-    //     {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "", "2021-01-04 7:19:45", "2022-01-04"}   //* Decrypted password: 4321cba
+    //     {1, 123456789, "0608Sbh", false, "John Doe", 37, 50800, "American", "2022-01-01 12:19:45", "2022-01-01"},  //* Decrypted password: 1234abc
+    //     {2, 987654321, ")795Ubf", true, "John Doe", 35, 6000, "American", "2025-01-02 1:19:45", "2022-01-02"},     //* Decrypted password: 4321cba
+    //     {3, 112233445, "0608Sbh", false, "Alice Smith", 67, 7000, "Canadian", "2020-01-03 4:19:45", "2022-01-03"}, //* Decrypted password: 1234abc
+    //     {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2021-01-04 7:19:45", "2022-01-04"}   //* Decrypted password: 4321cba
     // };
-
-    // * Adding dummy data to the vector of Users
-    Users.insert(Users.end(), begin(users), end(users));
+    // // * Adding dummy data to the vector of Users
+    // Users.insert(Users.end(), begin(users), end(users));
 
     // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
     // * users.[attribute].
@@ -215,8 +210,7 @@ int main()
                 cout << "3. Delete a record\n";
                 cout << "4. Update a record\n";
                 cout << "5. Sort records\n";
-                cout << "6. Evaluate an Employee's Performance\n";
-                cout << "7. Exit\n";
+                cout << "6. Exit\n";
                 cout << ">> ";
 
                 // * Wait for valid input
@@ -295,8 +289,8 @@ int main()
                 case 2:
                     //* Create Record
                     addUser();
-                    // saveUsers(Users);
-                    // fetchUsers(Users);
+                    saveUsers(Users);
+                    fetchUsers(Users);
 
                     break;
                 case 3:
@@ -304,7 +298,7 @@ int main()
                     cout << "User ID:\n>> ";
                     isValid(userID);
                     deleteUser(userID);
-                    // deleteUserFromDB(userID);
+                    deleteUserFromDB(userID);
                     break;
 
                 case 4:
@@ -312,7 +306,7 @@ int main()
                     cout << "User ID:\n>> ";
                     isValid(userID);
                     updateUser(userID);
-                    // updateUserInDB(userID);
+                    updateUserInDB(userID);
                     break;
 
                 case 5:
@@ -362,13 +356,6 @@ int main()
                     break;
 
                 case 6:
-                    // * Employee evaluation
-                    cout << "User ID:\n>> ";
-                    isValid(userID);
-                    evaluateUser(userID);
-                    break;
-
-                case 7:
                     // * Exit Admin Submenu
                     exitMenu = true;
                     break;
@@ -401,7 +388,7 @@ int main()
             // * Encrypting the password to compare with the stored encrypted password
             string encryptedPassword = vigenereCipherEncrypt(password, key);
 
-            if (encryptedPassword == Users[userIndex].password)
+            if (encryptedPassword == Users[userIndex].password )
             {
                 cout << endl;
                 cout << "Authentication successful. Entering employee menu.\n";
@@ -416,8 +403,10 @@ int main()
                     cout << "\nOptions:\n";
                     cout << "1. Display Information\n";
                     cout << "2. Save personal data in a .txt\n";
-                    cout << "3. View Performance Evaluation\n";
-                    cout << "4. Exit\n";
+
+                    // TODO: Add more features later
+
+                    cout << "3. Exit\n";
                     cout << ">> ";
 
                     // * Wait for valid input
@@ -435,9 +424,6 @@ int main()
                         break;
 
                     case 3:
-                        viewPerformance(userID);
-                        break;
-                    case 4:
                         // * Exit Employee Submenu
                         exitMenu = true;
                         break;
@@ -467,7 +453,7 @@ int main()
     return 0;
 }
 
-// * Function to read connection string for PostgreSQL from file
+//* Function to read connection string for PostgreSQL from file
 void getConnectionLink(string &connectionLink)
 {
     ifstream file("env.txt");
@@ -524,6 +510,7 @@ void fetchUsers(vector<User> &users)
     PQclear(res);
     PQfinish(conn);
 }
+
 
 // * Prevents program from crashing when user enters non-numeric as input
 int isValid(int &option)
@@ -1107,8 +1094,7 @@ void deleteUserFromDB(int ID)
     {
         if (isAdmin)
         {
-            cout << "Cannot delete an admin user.\n"
-                 << endl;
+            cout << "Cannot delete an admin user.\n" << endl;
         }
         return;
     }
@@ -1311,38 +1297,5 @@ void dataToFile(int userID, vector<User> &users)
                 cerr << "Unable to open file for " << user.name << endl;
             }
         }
-    }
-}
-
-void viewPerformance(int ID)
-{
-    ID -= 1; // * Starting Index 0
-    if (Users[ID].performance == "")
-    {
-        cout << "\nN/A\n";
-    }
-    else
-    {
-        cout << "Your Evaluation: " << Users[ID].performance << endl;
-    }
-}
-
-void evaluateUser(int ID)
-{
-    bool found = false;
-    for (int i = 0; i < Users.size(); i++)
-    {
-        if (Users[i].id == ID)
-        {
-            cout << "Report: ";
-            cin.ignore();
-            getline(cin, Users[i].performance);
-            found = true;
-        }
-    }
-
-    if (!found)
-    {
-        cout << "\nNot Found\n";
     }
 }
