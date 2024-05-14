@@ -13,7 +13,6 @@
 
 using namespace std;
 
-
 // * Main schema of the User table
 struct User
 {
@@ -127,21 +126,7 @@ int main()
     // * Fetch users from the database and saving in array to work with
     fetchUsers(Users);
 
-    //* Dummy user data
-    // User users[] = {
-    //     {1, 123456789, "0608Sbh", false, "John Doe", 37, 50800, "American", "2022-01-01 12:19:45", "2022-01-01"},  //* Decrypted password: 1234abc
-    //     {2, 987654321, ")795Ubf", true, "John Doe", 35, 6000, "American", "2025-01-02 1:19:45", "2022-01-02"},     //* Decrypted password: 4321cba
-    //     {3, 112233445, "0608Sbh", false, "Alice Smith", 67, 7000, "Canadian", "2020-01-03 4:19:45", "2022-01-03"}, //* Decrypted password: 1234abc
-    //     {4, 998877665, ")795Ubf", true, "Bob Johnson", 40, 80000, "British", "2021-01-04 7:19:45", "2022-01-04"}   //* Decrypted password: 4321cba
-    // };
-    // // * Adding dummy data to the vector of Users
-    // Users.insert(Users.end(), begin(users), end(users));
-
-    // * (Ali Alshehri) now you can use the arrays of users and their data to do your work as
-    // * users.[attribute].
-
-    //* Clean allocated memory and kill db connection
-    // delete[] users;
+    
 
     int option;
 
@@ -297,8 +282,9 @@ int main()
                     //* Delete Record
                     cout << "User ID:\n>> ";
                     isValid(userID);
-                    deleteUser(userID);
                     deleteUserFromDB(userID);
+                    deleteUser(userID);
+
                     break;
 
                 case 4:
@@ -307,6 +293,7 @@ int main()
                     isValid(userID);
                     updateUser(userID);
                     updateUserInDB(userID);
+
                     break;
 
                 case 5:
@@ -388,7 +375,7 @@ int main()
             // * Encrypting the password to compare with the stored encrypted password
             string encryptedPassword = vigenereCipherEncrypt(password, key);
 
-            if (encryptedPassword == Users[userIndex].password )
+            if (encryptedPassword == Users[userIndex].password)
             {
                 cout << endl;
                 cout << "Authentication successful. Entering employee menu.\n";
@@ -510,7 +497,6 @@ void fetchUsers(vector<User> &users)
     PQclear(res);
     PQfinish(conn);
 }
-
 
 // * Prevents program from crashing when user enters non-numeric as input
 int isValid(int &option)
@@ -1079,6 +1065,7 @@ void deleteUserFromDB(int ID)
 {
     bool found = false;
     bool isAdmin = false;
+
     for (const auto &user : Users)
     {
         if (user.id == ID)
@@ -1089,12 +1076,11 @@ void deleteUserFromDB(int ID)
         }
     }
 
-    // * Check if the user is an admin and if so, don't delete it
     if (!found || isAdmin)
     {
         if (isAdmin)
         {
-            cout << "Cannot delete an admin user.\n" << endl;
+            cout << "Cannot delete an admin user.\n";
         }
         return;
     }
@@ -1107,12 +1093,10 @@ void deleteUserFromDB(int ID)
         return;
     }
 
-    string query = "DELETE FROM users WHERE id = $1";
-    const char *paramValues[1] = {to_string(ID).c_str()};
-    int paramLengths[1] = {-1};
-    int paramFormats[1] = {0};
+    string idStr = to_string(ID);
+    const char *paramValues[1] = {idStr.c_str()};
 
-    PGresult *res = PQexecParams(conn, query.c_str(), 1, nullptr, paramValues, paramLengths, paramFormats, 0);
+    PGresult *res = PQexecParams(conn, "DELETE FROM users WHERE id = $1", 1, nullptr, paramValues, nullptr, nullptr, 0);
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
         cerr << "Failed to delete user: " << PQerrorMessage(conn) << endl;
